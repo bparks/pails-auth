@@ -78,6 +78,7 @@ if(!empty($_POST))
 		        } else {
 		             $message = lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
 		        }
+		        //header("Location: ");
 	   }
 	   else
 	   {
@@ -119,7 +120,7 @@ if(!empty($_POST))
                 </p>
                 
                 <p>
-                    <label>Password:</label>
+                    <label>Password:  &nbsp;<span class="tooltippopup" tip="Requires 8 or more characters." ><img src="/images/icon-help.png" height="18" width="18" /></label>
                     <input type="password" name="password" />
                 </p>
                 
@@ -146,7 +147,7 @@ if(!empty($_POST))
             </div>
 
 			<div class="clear"></div>
-            <p style="margin-top:30px; text-align:center;"><a href="login.php">Login</a> / <a href="forgot-password.php">Forgot Password?</a> / <a href="<?php echo $websiteUrl; ?>">Home Page</a></p>
+            <p style="margin-top:30px; text-align:center;"><a href="login.php">Login</a> / <a href="forgot-password.php">Forgot Password?</a></p>
 
 </body>
 </html>

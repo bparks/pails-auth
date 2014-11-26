@@ -28,7 +28,7 @@ if(isset($_GET["token"]))
 		}
 		else if(!validateactivationtoken($token)) //Check for a valid token. Must exist and active must be = 0
 		{
-			$errors[] = "Token does not exist / Account is already activated";
+			$errors[] = "Token does not exist / This account is already activated";
 		}
 		else
 		{
@@ -69,7 +69,7 @@ else
 				{
       errorBlock($errors);
            		 } else { ?> 
-       <p>Activation Complete. You may now <a href="login.php">login.</a></p>    		 
+       <p>Congratulations! You've successfully activated your new account. You may now <a href="login.php">login.</a></p>    		 
            		 
     		    <?php }?>
 

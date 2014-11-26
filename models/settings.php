@@ -2,20 +2,22 @@
 	/*
 		UserPie Version: 1.0
 		http://userpie.com
-		
-
 	*/
 
 	//General Settings
 	//--------------------------------------------------------------------------
 	
+	date_default_timezone_set('America/Denver');
+
 	//Database Information
-	$dbtype = "mysql"; 
-	$db_host = "localhost";
-	$db_user = "";
-	$db_pass = "";
-	$db_name = "";
-	$db_port = "";
+    $dbtype = "mysql"; 
+    $db_host = "localhost";
+    $db_user = "";
+    $db_pass = "";
+    $db_name = "";
+    $db_port = "";
+
+	
 	$db_table_prefix = "userpie_";
 
 	$langauge = "en";
@@ -35,7 +37,7 @@
 	$resend_activation_threshold = 1;
 	
 	//Tagged onto our outgoing emails
-	$emailAddress = "noreply@iloveUserPie.com";
+	$emailAddress = "sysadmin@synapsesoftware.com";
 	
 	//Date format used on email's
 	$emailDate = date("l \\t\h\e jS");

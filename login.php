@@ -19,82 +19,80 @@
 //Forms posted
 if(!empty($_POST))
 {
-		$errors = array();
-		$username = trim($_POST["username"]);
-		$password = trim($_POST["password"]);
-		$remember_choice = trim($_POST["remember_me"]);
+	$errors = array();
+	$username = trim($_POST["username"]);
+	$password = trim($_POST["password"]);
+	$remember_choice = trim($_POST["remember_me"]);
+
+	//Perform some validation
+	//Feel free to edit / change as required
+	if($username == "")
+	{
+		$errors[] = lang("ACCOUNT_SPECIFY_USERNAME");
+	}
+	if($password == "")
+	{
+		$errors[] = lang("ACCOUNT_SPECIFY_PASSWORD");
+	}
 	
-		//Perform some validation
-		//Feel free to edit / change as required
-		if($username == "")
+	//End data validation
+	if(count($errors) == 0)
+	{
+		//A security note here, never tell the user which credential was incorrect
+		if(!usernameExists($username))
 		{
-			$errors[] = lang("ACCOUNT_SPECIFY_USERNAME");
+			$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
 		}
-		if($password == "")
+		else
 		{
-			$errors[] = lang("ACCOUNT_SPECIFY_PASSWORD");
-		}
+			$userdetails = fetchUserDetails($username);
 		
-		//End data validation
-		if(count($errors) == 0)
-		{
-			//A security note here, never tell the user which credential was incorrect
-			if(!usernameExists($username))
+			//See if the user's account is activation
+			if($userdetails["active"]==0)
 			{
-				$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
+				$errors[] = lang("ACCOUNT_INACTIVE");
 			}
 			else
 			{
-				$userdetails = fetchUserDetails($username);
-			
-				//See if the user's account is activation
-				if($userdetails["active"]==0)
+				//Hash the password and use the salt from the database to compare the password.
+				$entered_pass = generateHash($password,$userdetails["password"]);
+
+				if($entered_pass != $userdetails["password"])
 				{
-					$errors[] = lang("ACCOUNT_INACTIVE");
+					//Again, we know the password is at fault here, but lets not give away the combination incase of someone bruteforcing
+					$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
 				}
 				else
 				{
-					//Hash the password and use the salt from the database to compare the password.
-					$entered_pass = generateHash($password,$userdetails["password"]);
+					//passwords match! we're good to go'
+					
+					//Construct a new logged in user object
+					//Transfer some db data to the session object
+					$loggedInUser = new loggedInUser();
+					$loggedInUser->email = $userdetails["email"];
+					$loggedInUser->user_id = $userdetails["user_id"];
+					$loggedInUser->hash_pw = $userdetails["password"];
+					$loggedInUser->display_username = $userdetails["username"];
+					$loggedInUser->clean_username = $userdetails["username_clean"];
+					$loggedInUser->remember_me = $remember_choice;
+					$loggedInUser->remember_me_sessid = generateHash(uniqid(rand(), true));
+					
+					//Update last sign in
+					$loggedInUser->updatelast_sign_in();
 
-					if($entered_pass != $userdetails["password"])
-					{
-						//Again, we know the password is at fault here, but lets not give away the combination incase of someone bruteforcing
-						$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
+					$_SESSION["userPieUser"] = $loggedInUser;
+					if($loggedInUser->remember_me == 1) {
+						$db->sql_query("INSERT INTO ".$db_table_prefix."sessions VALUES('".time()."', '".serialize($loggedInUser)."', '".$loggedInUser->remember_me_sessid."')");
+						setcookie("userPieUser", $loggedInUser->remember_me_sessid, time()+parseLength($remember_me_length), '/');
 					}
-					else
-					{
-						//passwords match! we're good to go'
-						
-						//Construct a new logged in user object
-						//Transfer some db data to the session object
-						$loggedInUser = new loggedInUser();
-						$loggedInUser->email = $userdetails["email"];
-						$loggedInUser->user_id = $userdetails["user_id"];
-						$loggedInUser->hash_pw = $userdetails["password"];
-						$loggedInUser->display_username = $userdetails["username"];
-						$loggedInUser->clean_username = $userdetails["username_clean"];
-$loggedInUser->remember_me = $remember_choice;
-$loggedInUser->remember_me_sessid = generateHash(uniqid(rand(), true));
-						
-						//Update last sign in
-						$loggedInUser->updatelast_sign_in();
-		
-						if($loggedInUser->remember_me == 0)
-$_SESSION["userPieUser"] = $loggedInUser;
-else if($loggedInUser->remember_me == 1) {
-$db->sql_query("INSERT INTO ".$db_table_prefix."sessions VALUES('".time()."', '".serialize($loggedInUser)."', '".$loggedInUser->remember_me_sessid."')");
-setcookie("userPieUser", $loggedInUser->remember_me_sessid, time()+parseLength($remember_me_length));
-}
-						
-						//Redirect to user account page
-						header("Location: index.php");
-						die();
-					}
+					
+					//Redirect to user account page
+					header("Location: index.php");
 				}
 			}
 		}
 	}
+} else
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -114,21 +112,18 @@ setcookie("userPieUser", $loggedInUser->remember_me_sessid, time()+parseLength($
 
                
         <?php
-        if(!empty($_POST))
-        {
-        ?>
-        <?php
-        if(count($errors) > 0)
-        {
+        if(!empty($_POST)):
+        	if(count($errors) > 0):
         ?>
         <div id="errors">
         <?php errorBlock($errors); ?>
         </div>     
         <?php
-        } }
+        	endif;
+        endif;
         ?> 
         
-        <?php if(($_GET['status']) == "success") 
+        <?php if(isset($_GET['status']) && ($_GET['status']) == "success") 
         {
         
         echo "<p>Your account was created successfully. Please login.</p>";
@@ -170,7 +165,7 @@ setcookie("userPieUser", $loggedInUser->remember_me_sessid, time()+parseLength($
         
             <div class="clear"></div>
 <p style="margin-top:30px; text-align:center;">
-<a href="register.php">Sign Up</a> | <a href="forgot-password.php">Forgot Password?</a> | <a href="/">Home Page</a></p>
+<a href="register.php">Sign Up</a> | <a href="forgot-password.php">Forgot Password?</a></p>
             
       
 </body>

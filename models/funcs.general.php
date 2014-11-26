@@ -63,12 +63,17 @@
 		}
 		else
 		{
+			foreach($errors as $error) {
+				echo '<p style="color:red">'.$error.'</p>';
+			}
+		/*
 			echo "<ul>";
 			foreach($errors as $error)
 			{
 				echo "<li>".$error."</li>";
 			}
 			echo "</ul>";
+		*/
 		}
 	}
 	

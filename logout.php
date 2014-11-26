@@ -20,13 +20,11 @@
 		}
 	
 		header("Location: ".$add_http.$websiteUrl);
-		die();
+		//die();
 	}
 	else
 	{
 		header("Location: http://".$_SERVER['HTTP_HOST']);
-		die();
+		//die();
 	}	
 ?>
-
-

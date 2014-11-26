@@ -10,7 +10,7 @@
 
 /**
 * @ignore
-
+*/
 /**
 * Database Abstraction Layer
 * @package dbal

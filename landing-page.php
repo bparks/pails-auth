@@ -34,23 +34,10 @@
       <div class="carousel-caption">
         <p>Pic 1</p>
       </div>
-    </div>
-        <div class="item">
-      <img src="assets/img/02.jpg" alt="Pic 2" />
-      <div class="carousel-caption">
-        <p>Pic 2</p>
-      </div>
-    </div>
-        <div class="item">
-      <img src="assets/img/03.jpg" alt="Pic Pic 1" />
-      <div class="carousel-caption">
-        <p>Pic 3</p>
-      </div>
-    </div>
       </div>
 
-  <a class="carousel-control left" href="#carousel" data-slide="prev">&lsaquo;</a>
-  <a class="carousel-control right" href="#carousel" data-slide="next">&rsaquo;</a>
+  <!-- <a class="carousel-control left" href="#carousel" data-slide="prev">&lsaquo;</a> -->
+  <!-- <a class="carousel-control right" href="#carousel" data-slide="next">&rsaquo;</a> -->
 
 </div>
 

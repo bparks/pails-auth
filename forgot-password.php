@@ -72,6 +72,7 @@ if(!empty($_GET["confirm"]))
 						flagLostpasswordRequest($userdetails["username_clean"],0);
 						
 						$success_message  = lang("FORGOTPASS_NEW_PASS_EMAIL");
+						//header("Location: /");
 					}
 			}
 		}
@@ -164,8 +165,8 @@ if(!empty($_POST))
 					
 					$mail = new userPieMail();
 					
-					$confirm_url = lang("CONFIRM")."\n".$websiteUrl."forgot-password.php?confirm=".$userdetails["activationtoken"];
-					$deny_url = ("DENY")."\n".$websiteUrl."forgot-password.php?deny=".$userdetails["activationtoken"];
+					$confirm_url = $websiteUrl."forgot-password.php?confirm=".$userdetails["activationtoken"];
+					$deny_url = $websiteUrl."forgot-password.php?deny=".$userdetails["activationtoken"];
 					
 					//Setup our custom hooks
 					$hooks = array(
@@ -179,7 +180,7 @@ if(!empty($_POST))
 					}
 					else
 					{
-						if(!$mail->sendMail($userdetails["email"],"Lost password request"))
+						if(!$mail->sendMail($userdetails["email"],"Your Password Reset Request"))
 						{
 							$errors[] = lang("MAIL_ERROR");
 						}
@@ -232,7 +233,7 @@ if(!empty($_POST))
                 <p><?php echo $success_message; ?></p>
             
             </div>
-        <?
+        <?php
 			}
         }
         ?> 
@@ -255,14 +256,14 @@ if(!empty($_POST))
         </div>    
             
  <div class="modal-footer">
-<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Reset Password" />
+<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Reset Your Password" />
 </div>
                 
                 </form>
             </div>
 
 			<div class="clear"></div>
-            <p style="margin-top:30px; text-align:center;"><a href="register.php">Sign Up</a> / <a href="login.php">Login</a> / <a href="<?php echo $websiteUrl; ?>">Home Page</a></p>
+            <p style="margin-top:30px; text-align:center;"><a href="register.php">Sign Up</a> / <a href="login.php">Login</a></p>
             <div class="clear"></div>
 </body>
 </html>
