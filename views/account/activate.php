@@ -1,16 +1,4 @@
 <?php
-	/*
-		UserPie Version: 1.0
-		http://userpie.com
-		
-
-	*/
-	require_once("models/config.php");
-	
-	//Prevent the user visiting the logged in page if he/she is already logged in
-	if(isUserLoggedIn()) { header("Location: index.php"); die(); }
-?>
-<?php
 	/* 
 		Activate a users account
 	*/
@@ -52,8 +40,7 @@ else
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Account Activation | <?php echo $websiteName; ?> </title>
-<?php require_once("head_inc.php"); ?>
+<title>Account Activation</title>
 </head>
 <body>
 
@@ -69,7 +56,7 @@ else
 				{
       errorBlock($errors);
            		 } else { ?> 
-       <p>Congratulations! You've successfully activated your new account. You may now <a href="login.php">login.</a></p>    		 
+       <p>Congratulations! You've successfully activated your new account. You may now <a href="/session/login">login.</a></p>    		 
            		 
     		    <?php }?>
 
@@ -85,7 +72,7 @@ else
         
             <div class="clear"></div>
 <p style="margin-top:30px; text-align:center;">
-<a href="register.php">Sign Up</a> | <a href="login.php">Login</a> | <a href="forgot-password.php">Forgot Password?</a> | <a href="/">Home Page</a></p>
+<a href="/user/register">Sign Up</a> | <a href="/user/login">Login</a> | <a href="/account/forgot">Forgot Password?</a> | <a href="/">Home Page</a></p>
             
 </body>
 </html>

@@ -8,7 +8,7 @@
 	
 	function sanitize($str)
 	{
-		return strtolower(strip_tags(trim(($str))));
+		return strtolower(strip_tags(trim($str)));
 	}
 	
 	function isValidemail($email)
@@ -79,7 +79,7 @@
 	
 	function lang($key,$markers = NULL)
 	{
-		global $lang;
+		require(__DIR__."/lang/en.php");
 		
 		if($markers == NULL)
 		{
@@ -114,24 +114,25 @@
 // Destroy the session data
 // Remember-Me Hack v0.03
 // <http://rememberme4uc.sourceforge.net/>
-function destorySession($name)
+function destroySession($name)
 {
-	global $remember_me_length,$loggedInUser,$db,$db_table_prefix;
-		
-	   if($loggedInUser->remember_me == 0) { 
+	if($_SESSION["userPieUser"]->remember_me == 0)
+	{ 
 		if(isset($_SESSION[$name]))
 		{
 			$_SESSION[$name] = NULL;
 			unset($_SESSION[$name]);
-			$loggedInUser = NULL;
+			$_SESSION["userPieUser"] = NULL;
 		}
 	}
-	else if($loggedInUser->remember_me == 1) {
+	else if($_SESSION["userPieUser"]->remember_me == 1)
+	{
 		if(isset($_COOKIE[$name]))
 		{
-			$db->sql_query("DELETE FROM ".$db_table_prefix."sessions WHERE session_id = '".$loggedInUser->remember_me_sessid."'");
-			setcookie($name, "", time() - parseLength($remember_me_length));
-			$loggedInUser = NULL;
+			$session = Session::find($_SESSION["userPieUser"]->remember_me_sessid);
+			$session->delete();
+			setcookie($name, "", time() - 604800);
+			$_SESSION["userPieUser"] = NULL;
 		}
 	} 
 }
@@ -146,25 +147,6 @@ function updateSessionObj()
 
 	$newObj = serialize($loggedInUser);
 	$db->sql_query("UPDATE ".$db_table_prefix."sessions SET session_data = '".$newObj."' WHERE session_id = '".$loggedInUser->remember_me_sessid."'");
-}
-
-// Remember-Me Hack v0.03
-// <http://rememberme4uc.sourceforge.net/>
-
-function parseLength($len) {
-$user_units = strtolower(substr($len, -2));
-$user_time = substr($len, 0, -2);
-$units = array("mi" => 60,
-"hr" => 3600,
-"dy" => 86400,
-"wk" => 604800,
-"mo" => 2592000);
-if(!array_key_exists($user_units, $units))
-die("Invalid unit of time.");
-else if(!is_numeric($user_time))
-die("Invalid length of time.");
-else
-return (int)$user_time*$units[$user_units];
 }
 
 ?>

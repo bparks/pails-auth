@@ -18,15 +18,11 @@ class loggedInUser {
 	//Simple function to update the last sign in of a user
 	public function updatelast_sign_in()
 	{
-		global $db,$db_table_prefix;
+		$user = User::find($this->user_id);
+		$user->last_sign_in = time();
+		$user->save();
 		
-		$sql = "UPDATE ".$db_table_prefix."users
-			    SET
-				last_sign_in = '".time()."'
-				WHERE
-				user_id = '".$db->sql_escape($this->user_id)."'";
-		
-		return ($db->sql_query($sql));
+		return true;
 	}
 	
 	//Return the timestamp when the user registered
@@ -51,38 +47,33 @@ class loggedInUser {
 	//Update a users password
 	public function updatepassword($pass)
 	{
-		global $db,$db_table_prefix;
-		
 		$secure_pass = generateHash($pass);
 		
 		$this->hash_pw = $secure_pass;
-if($this->remember_me == 1)
-updateSessionObj();
 		
-		$sql = "UPDATE ".$db_table_prefix."users
-		       SET
-			   password = '".$db->sql_escape($secure_pass)."' 
-			   WHERE
-			   user_id = '".$db->sql_escape($this->user_id)."'";
+		if($this->remember_me == 1)
+			updateSessionObj();
+
+		$user = User::find($this->user_id);
+		$user->password = $secure_pass;
+		$user->save();
 	
-		return ($db->sql_query($sql));
+		return true;
 	}
 	
 	//Update a users email
 	public function updateemail($email)
 	{
-		global $db,$db_table_prefix;
-		
 		$this->email = $email;
-if($this->remember_me == 1)
-updateSessionObj();
+
+		if($this->remember_me == 1)
+			updateSessionObj();
+
+		$user = User::find($this->user_id);
+		$user->email = $email;
+		$user->save();
 		
-		$sql = "UPDATE ".$db_table_prefix."users
-				SET email = '".$email."'
-				WHERE
-				user_id = '".$db->sql_escape($this->user_id)."'";
-		
-		return ($db->sql_query($sql));
+		return true;
 	}
 	
 	//Fetch all user group information
@@ -128,7 +119,7 @@ updateSessionObj();
 	//Logout
 	function userLogOut()
 	{
-		destorySession("userPieUser");
+		destroySession("userPieUser");
 	}
 
 }

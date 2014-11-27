@@ -1,16 +1,4 @@
 <?php
-	/*
-		UserPie Version: 1.0
-		http://userpie.com
-		
-
-	*/
-	require_once("models/config.php");
-	
-	//Prevent the user visiting the lost password page if he/she is already logged in
-	if(isUserLoggedIn()) { header("Location: account.php"); die(); }
-?>
-<?php
 	/* 
 		Below process a new activation link for a user, as they first activation email may have never arrived.
 	*/
@@ -20,7 +8,7 @@ $success_message = "";
 
 //Forms posted
 //----------------------------------------------------------------------------------------------
-if(!empty($_POST) && $emailActivation)
+if(!empty($_POST))
 {
 		$email = $_POST["email"];
 		$username = $_POST["username"];
@@ -60,17 +48,17 @@ if(!empty($_POST) && $emailActivation)
 				$userdetails = fetchUserDetails($username);
 			
 				//See if the user's account is activation
-				if($userdetails["active"]==1)
+				if($userdetails->active==1)
 				{
 					$errors[] = lang("ACCOUNT_ALREADY_ACTIVE");
 				}
 				else
 				{
-					$hours_diff = round((time()-$userdetails["last_activation_request"]) / (3600*$resend_activation_threshold),0);
+					$hours_diff = round((time()-$userdetails->last_activation_request) / 3600, 0);
 
-					if($resend_activation_threshold!=0 && $hours_diff <= $resend_activation_threshold)
+					if($hours_diff <= 1)
 					{
-						$errors[] = lang("ACCOUNT_LINK_ALREADY_SENT",array($resend_activation_threshold));
+						$errors[] = lang("ACCOUNT_LINK_ALREADY_SENT",array(1));
 					}
 					else
 					{
@@ -85,12 +73,12 @@ if(!empty($_POST) && $emailActivation)
 						{
 							$mail = new userPieMail();
 							
-							$activation_url = $websiteUrl."activate-account.php?token=".$new_activation_token;
+							$activation_url = 'http://'.$_SERVER['HTTP_HOST']."/account/activate?token=".$new_activation_token;
 						
 							//Setup our custom hooks
 							$hooks = array(
-								"searchStrs" => array("#ACTIVATION-URL","#USERNAME#"),
-								"subjectStrs" => array($activation_url,$userdetails["username"])
+								"searchStrs" => array("#ACTIVATION-MESSAGE","#USERNAME#"),
+								"subjectStrs" => array($activation_url,$userdetails->username)
 							);
 							
 							if(!$mail->newTemplateMsg("resend-activation.txt",$hooks))
@@ -99,7 +87,7 @@ if(!empty($_POST) && $emailActivation)
 							}
 							else
 							{
-								if(!$mail->sendMail($userdetails["email"],"Activate your UserPie Account"))
+								if(!$mail->sendMail($userdetails->email,"Activate your UserPie Account"))
 								{
 									$errors[] = lang("MAIL_ERROR");
 								}
@@ -120,8 +108,7 @@ if(!empty($_POST) && $emailActivation)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Resend Activation email | <?php echo $websiteName; ?> </title>
-<?php require_once("head_inc.php"); ?>
+<title>Resend Activation email</title>
 </head>
 <body>
 
@@ -141,7 +128,7 @@ if(!empty($_POST) && $emailActivation)
         	<div id="errors">
             	<?php errorBlock($errors); ?>
             </div> 
-        <?
+        <?php
             }
 			else
 			{
@@ -151,21 +138,10 @@ if(!empty($_POST) && $emailActivation)
                 <p><?php echo $success_message; ?></p>
             
             </div>
-        <?
+        <?php
 			}
         }
         ?> 
-    
-	
-	<?php 
-    
-    if(!$emailActivation)
-    { 
-        echo lang("FEATURE_DISABLED");
-    }
-	else
-	{
-    ?>
         <form name="resendActivation" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
         
         
@@ -183,8 +159,6 @@ if(!empty($_POST) && $emailActivation)
 
             
         </form>
-
-	 <? } ?> 
 	       </div>           
       </div>
 
@@ -196,7 +170,7 @@ if(!empty($_POST) && $emailActivation)
             </div>
 
 			<div class="clear"></div>
-            <p style="margin-top:30px; text-align:center;"><a href="register.php">Register</a> / <a href="login.php">Login</a> / <a href="forgot-password.php">Forgot Password?</a> / <a href="<?php echo $websiteUrl; ?>">Home Page</a></p>
+            <p style="margin-top:30px; text-align:center;"><a href="/user/register">Register</a> / <a href="/session/login">Login</a> / <a href="/account/forgot">Forgot Password?</a> / <a href="/">Home Page</a></p>
 
 
 </body>

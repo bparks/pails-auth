@@ -1,18 +1,4 @@
 <?php
-	/*
-		UserPie Version: 1.0
-		http://userpie.com
-		
-
-	*/
-	require_once("models/config.php");
-	
-	//Prevent the user visiting the logged in page if he/she is already logged in
-	if(isUserLoggedIn()) { header("Location: index.php"); die(); }
-?>
-
-
-<?php
 	/* 
 		Below is a very simple example of how to process a new user.
 		 Some simple validation (ideally more is needed).
@@ -52,7 +38,7 @@ if(!empty($_POST))
 		if(count($errors) == 0)
 		{	
 				//Construct a user object
-				$user = new User($username,$password,$email);
+				$user = User::register($username,$password,$email);
 				
 				//Checking this flag tells us whether there were any errors such as possible data duplication occured
 				if(!$user->status)
@@ -90,8 +76,7 @@ if(!empty($_POST))
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Registration | <?php echo $websiteName; ?> </title>
-<?php require_once("head_inc.php"); ?>
+<title>Registration</title>
 </head>
 <body>
 <div class="modal-ish">
@@ -147,7 +132,7 @@ if(!empty($_POST))
             </div>
 
 			<div class="clear"></div>
-            <p style="margin-top:30px; text-align:center;"><a href="login.php">Login</a> / <a href="forgot-password.php">Forgot Password?</a></p>
+            <p style="margin-top:30px; text-align:center;"><a href="/session/login">Login</a> / <a href="/account/forgot">Forgot Password?</a></p>
 
 </body>
 </html>

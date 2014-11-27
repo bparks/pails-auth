@@ -1,17 +1,4 @@
 <?php
-	/*
-		UserCake Version: 1.0
-		http://usercake.com
-		
-
-	*/
-	include("models/config.php");
-	
-	//Prevent the user visiting the logged in page if he/she is not logged in
-	if(!isUserLoggedIn()) { header("Location: login.php"); die(); }
-?>
-
-<?php
 	/* 
 		Below is a very simple example of how to process a login request.
 		Some simple validation (ideally more is needed).
@@ -49,25 +36,25 @@ if(!empty($_POST))
 		if(count($errors) == 0)
 		{
 			//Confirm the hash's match before updating a users password
-			$entered_pass = generateHash($password,$loggedInUser->hash_pw);
+			$entered_pass = generateHash($password,$_SESSION['userPieUser']->hash_pw);
 			
 			//Also prevent updating if someone attempts to update with the same password
-			$entered_pass_new = generateHash($password_new,$loggedInUser->hash_pw);
+			$entered_pass_new = generateHash($password_new,$_SESSION['userPieUser']->hash_pw);
 		
-			if($entered_pass != $loggedInUser->hash_pw)
+			if($entered_pass != $_SESSION['userPieUser']->hash_pw)
 			{
 				//No match
 				$errors[] = lang("ACCOUNT_PASSWORD_INVALID");
 			}
-			else if($entered_pass_new == $loggedInUser->hash_pw)
+			else if($entered_pass_new == $_SESSION['userPieUser']->hash_pw)
 			{
-				//Don't update, this fool is trying to update with the same password ÃÂ¬ÃÂ¬
+				//Don't update, this fool is trying to update with the same password
 				$errors[] = lang("NOTHING_TO_UPDATE");
 			}
 			else
 			{
 				//This function will create the new hash and update the hash_pw property.
-				$loggedInUser->updatePassword($password_new);
+				$_SESSION['userPieUser']->updatePassword($password_new);
 			}
 		}
 	}
@@ -76,12 +63,10 @@ if(!empty($_POST))
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Update Password | <?php echo $websiteName; ?> </title>
-<?php require_once("head_inc.php"); ?>
+<title>Update Password</title>
 
 </head>
 <body>
-<?php require_once("navbar.php"); ?>
 
 <div id="content">
 <div class="modal-ish">

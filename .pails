@@ -1,0 +1,5 @@
+{
+	"name": "auth",
+	"index": "models/config.php",
+	"deps": ["activerecord"]
+}

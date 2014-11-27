@@ -1,16 +1,4 @@
 <?php
-	/*
-		UserCake Version: 1.0
-		http://usercake.com
-		
-
-	*/
-	include("models/config.php");
-	
-	//Prevent the user visiting the logged in page if he/she is not logged in
-	if(!isUserLoggedIn()) { header("Location: login.php"); die(); }
-?>
-<?php
 	/* 
 		Below is a very simple example of how to process a login request.
 		Some simple validation (ideally more is needed).
@@ -33,7 +21,7 @@ if(!empty($_POST))
 		{
 			$errors[] = lang("ACCOUNT_INVALID_EMAIL");
 		}
-		else if($email == $loggedInUser->email)
+		else if($email == $_SESSION['userPieUser']->email)
 		{
 				$errors[] = lang("NOTHING_TO_UPDATE");
 		}
@@ -45,7 +33,7 @@ if(!empty($_POST))
 		//End data validation
 		if(count($errors) == 0)
 		{
-			$loggedInUser->updateEmail($email);
+			$_SESSION['userPieUser']->updateEmail($email);
 		}
 	}
 ?>
@@ -53,12 +41,10 @@ if(!empty($_POST))
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Update Contact Details | <?php echo $websiteName; ?> </title>
-<?php require_once("head_inc.php"); ?>
+<title>Update Contact Details</title>
 
 </head>
 <body>
-<?php require_once("navbar.php"); ?>
 <div id="content">
 
 <div class="modal-ish">
@@ -88,7 +74,7 @@ if(!empty($_POST))
             
                 <p>
                     <label>Email:</label>
-                    <input type="text" name="email" value="<?php echo $loggedInUser->email; ?>" />
+                    <input type="text" name="email" value="<?php echo $_SESSION['userPieUser']->email; ?>" />
                 </p>
                </div>
 

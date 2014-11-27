@@ -31,11 +31,11 @@
 		"ACCOUNT_NOW_ACTIVE"					=> "Your account is now active",
 		"ACCOUNT_SPECIFY_NEW_PASSWORD"			=> "Please enter your new password",	
 		"ACCOUNT_NEW_PASSWORD_LENGTH"			=> "Your new password must be no fewer than %m1% characters or greater than %m2%",	
-		"ACCOUNT_PASSWORD_INVALID"				=> "Current password doesn't match the one we have one record",	
+		"ACCOUNT_PASSWORD_INVALID"				=> "Current password doesn't match the one we have on record",	
 		"ACCOUNT_EMAIL_TAKEN"					=> "This email address is already taken by another user",
 		"ACCOUNT_DETAILS_UPDATED"				=> "Your account details have been updated",
 		"ACTIVATION_MESSAGE"					=> "%m1%activate-account.php?token=%m2%",							
-		"ACCOUNT_REGISTRATION_COMPLETE_TYPE1"	=> "You have successfully registered. You can now login <a href=\"login.php\">here</a>.",
+		"ACCOUNT_REGISTRATION_COMPLETE_TYPE1"	=> "You have successfully registered. You can now login <a href=\"/session/login\">here</a>.",
 		"ACCOUNT_REGISTRATION_COMPLETE_TYPE2"	=> "You have successfully registered. You will soon receive an activation email. 
 													You must activate your account before logging in.",
 	));

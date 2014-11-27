@@ -1,4 +1,0 @@
-KNONWN ISSUES
-
-
-The login script needs to be in the base/root directory of your website in order for the "remember me" cookie to work correctly.

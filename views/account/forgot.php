@@ -1,16 +1,4 @@
 <?php
-	/*
-		UserPie Version: 1.0
-		http://userpie.com
-		
-
-	*/
-	require_once("models/config.php");
-	
-	//Prevent the user visiting the lost password page if he/she is already logged in
-	if(isUserLoggedIn()) { header("Location: account.php"); die(); }
-?>
-<?php
 	/* 
 		Below is a very simple example of how to process a lost password request
 		We'll deal with a request in two stages, confirmation or deny then proccess
@@ -47,7 +35,7 @@ if(!empty($_GET["confirm"]))
 		//Setup our custom hooks
 		$hooks = array(
 				"searchStrs" => array("#GENERATED-PASS#","#USERNAME#"),
-				"subjectStrs" => array($rand_pass,$userdetails["username"])
+				"subjectStrs" => array($rand_pass,$userdetails->username)
 		);
 					
 		if(!$mail->newTemplateMsg("your-lost-password.txt",$hooks))
@@ -56,7 +44,7 @@ if(!empty($_GET["confirm"]))
 		}
 		else
 		{	
-			if(!$mail->sendMail($userdetails["email"],"Your new password"))
+			if(!$mail->sendMail($userdetails->email,"Your new password"))
 			{
 					$errors[] = lang("MAIL_ERROR");
 			}
@@ -69,7 +57,7 @@ if(!empty($_GET["confirm"]))
 					else
 					{	
 						//Might be wise if this had a time delay to prevent a flood of requests.
-						flagLostpasswordRequest($userdetails["username_clean"],0);
+						flagLostpasswordRequest($userdetails->username_clean,0);
 						
 						$success_message  = lang("FORGOTPASS_NEW_PASS_EMAIL");
 						//header("Location: /");
@@ -97,7 +85,7 @@ if(!empty($_GET["deny"]))
 	
 		$userdetails = fetchUserDetails(NULL,$token);
 		
-		flagLostpasswordRequest($userdetails['username_clean'],0);
+		flagLostpasswordRequest($userdetails->username_clean,0);
 		
 		$success_message = lang("FORGOTPASS_REQUEST_CANNED");
 	}
@@ -152,7 +140,7 @@ if(!empty($_POST))
 				//Check if the user has any outstanding lost password requests
 				$userdetails = fetchUserDetails($username);
 				
-				if($userdetails["LostpasswordRequest"] == 1)
+				if($userdetails->lostpasswordrequest == 1)
 				{
 					$errors[] = lang("FORGOTPASS_REQUEST_EXISTS");
 				}
@@ -165,13 +153,13 @@ if(!empty($_POST))
 					
 					$mail = new userPieMail();
 					
-					$confirm_url = $websiteUrl."forgot-password.php?confirm=".$userdetails["activationtoken"];
-					$deny_url = $websiteUrl."forgot-password.php?deny=".$userdetails["activationtoken"];
+					$confirm_url = 'http://'.$_SERVER['HTTP_HOST']."/account/forgot?confirm=".$userdetails->activationtoken;
+					$deny_url = 'http://'.$_SERVER['HTTP_HOST']."/account/forgot?deny=".$userdetails->activationtoken;
 					
 					//Setup our custom hooks
 					$hooks = array(
 						"searchStrs" => array("#CONFIRM-URL#","#DENY-URL#","#USERNAME#"),
-						"subjectStrs" => array($confirm_url,$deny_url,$userdetails["username"])
+						"subjectStrs" => array($confirm_url,$deny_url,$userdetails->username)
 					);
 					
 					if(!$mail->newTemplateMsg("lost-password-request.txt",$hooks))
@@ -180,7 +168,7 @@ if(!empty($_POST))
 					}
 					else
 					{
-						if(!$mail->sendMail($userdetails["email"],"Your Password Reset Request"))
+						if(!$mail->sendMail($userdetails->email,"Your Password Reset Request"))
 						{
 							$errors[] = lang("MAIL_ERROR");
 						}
@@ -202,8 +190,7 @@ if(!empty($_POST))
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Forgot password | <?php echo $websiteName; ?> </title>
-<?php require_once("head_inc.php"); ?>
+<title>Forgot password</title>
 </head>
 <body>
 <div class="modal-ish">
@@ -263,7 +250,7 @@ if(!empty($_POST))
             </div>
 
 			<div class="clear"></div>
-            <p style="margin-top:30px; text-align:center;"><a href="register.php">Sign Up</a> / <a href="login.php">Login</a></p>
+            <p style="margin-top:30px; text-align:center;"><a href="/user/register">Sign Up</a> / <a href="/session/login">Login</a></p>
             <div class="clear"></div>
 </body>
 </html>
