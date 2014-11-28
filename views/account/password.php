@@ -59,70 +59,41 @@ if(!empty($_POST))
 		}
 	}
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Update Password</title>
-
-</head>
-<body>
-
-<div id="content">
 <div class="modal-ish">
-  <div class="modal-body">
-
+	<div class="modal-body">
 		<?php
-            if(!empty($_POST))
-            {
-				if(count($errors) > 0)
-				{
-            ?>
+        if(!empty($_POST)):
+            if(count($errors) > 0):
+        ?>
             <div id="errors">
-            <?php errorBlock($errors); ?>
+            	<?php errorBlock($errors); ?>
             </div>     
-            <?php } else { ?> 
+        <?php
+        	else:
+        ?> 
             <div id="success">
                <p><?php echo lang("ACCOUNT_DETAILS_UPDATED"); ?></p>
             </div>
-        <?php } }?>
-
-		
-
-            <form name="changePass" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-            
-                <p>
-                    <label>Password:</label>
-                    <input type="password" name="password" />
-                </p>
-                
-                <p>
-                    <label>New Pass:</label>
-                    <input type="password" name="passwordc" />
-                </p>
-                
-                <p>
-                    <label>Confirm Pass:</label>
-                    <input type="password" name="passwordcheck" />
-                </p>
-            </div>    
-
-
-  <div class="modal-footer">
-<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Update" />
-  </div>
-
-  
-</div>
-
-                </form>
-                
+        <?php
+        	endif;
+        endif;
+        ?>
+        <form name="changePass" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+        <p>
+            <label>Password:</label>
+            <input type="password" name="password" />
+        </p>
         
-            <div class="clear"></div>
-
-  <p style="margin-top:30px; text-align:center;"><a href="/">Home</a></p>
-</div>  
-</body>
-</html>
-
-
+        <p>
+            <label>New Pass:</label>
+            <input type="password" name="passwordc" />
+        </p>
+        
+        <p>
+            <label>Confirm Pass:</label>
+            <input type="password" name="passwordcheck" />
+        </p>
+		<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Update" />
+        </form>
+	</div>
+</div>

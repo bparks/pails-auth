@@ -96,7 +96,6 @@ if(!empty($_GET["deny"]))
 
 //----------------------------------------------------------------------------------------------
 
-
 //Forms posted
 //----------------------------------------------------------------------------------------------
 if(!empty($_POST))
@@ -186,73 +185,43 @@ if(!empty($_POST))
 }	
 //----------------------------------------------------------------------------------------------	
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Forgot password</title>
-</head>
-<body>
 <div class="modal-ish">
-  <div class="modal-header">
+  	<div class="modal-header">
         <h2>Password Reset</h2>
-  </div>
-  <div class="modal-body">
+  	</div>
+  	<div class="modal-body">
         
         <br>
         
 		<?php
-        if(!empty($_POST) || !empty($_GET))
-        {
-            if(count($errors) > 0)
-            {
+        if(!empty($_POST) || !empty($_GET)):
+            if(count($errors) > 0):
 		?>
         	<div id="errors">
             	<?php errorBlock($errors); ?>
             </div> 
         <?
-            }
-			else
-			{
+			else:
 		?>
             <div id="success">
-            
                 <p><?php echo $success_message; ?></p>
-            
             </div>
         <?php
-			}
-        }
-        ?> 
-        
+			endif;
+        endif;
+        ?>
         <div id="regbox">
             <form name="newLostPass" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-            
             <p>
                 <label>Username:</label>
                 <input type="text" name="username" />
             </p>
-            
-            
             <p>    
                 <label>Email:</label>
                 <input type="text" name="email" />
             </p>
-            
+			<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Reset Your Password" />
+            </form>
         </div>
-        </div>    
-            
- <div class="modal-footer">
-<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Reset Your Password" />
+	</div>
 </div>
-                
-                </form>
-            </div>
-
-			<div class="clear"></div>
-            <p style="margin-top:30px; text-align:center;"><a href="/user/register">Sign Up</a> / <a href="/session/login">Login</a></p>
-            <div class="clear"></div>
-</body>
-</html>
-
-

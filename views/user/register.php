@@ -72,67 +72,39 @@ if(!empty($_POST))
 	   }
 	}
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Registration</title>
-</head>
-<body>
 <div class="modal-ish">
-  <div class="modal-header">
-<h2>Sign Up</h2>
-</div>
-  <div class="modal-body">
-
-       
-
-			
-
-
-        <div id="success">
-        
-           <p><?php if (isset($message)) echo $message; ?></p>
-           
+	<div class="modal-header">
+		<h2>Sign Up</h2>
+	</div>
+	<div class="modal-body">
+		<div id="success">
+	    	<p><?php if (isset($message)) echo $message; ?></p>
         </div>
 
-            <div id="regbox">
-                <form name="newUser" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-                
-                <p>
-                    <label>Username:</label>
-                    <input type="text" name="username" />
-                </p>
-                
-                <p>
-                    <label>Password:  &nbsp;<span class="tooltippopup" tip="Requires 8 or more characters." ><img src="/images/icon-help.png" height="18" width="18" /></label>
-                    <input type="password" name="password" />
-                </p>
-                
-                <p>
-                    <label>Re-type Password:</label>
-                    <input type="password" name="passwordc" />
-                </p>
-                
-                <p>
-                    <label>Email:</label>
-                    <input type="text" name="email" />
-                </p>
-    
-      </div>           
-      </div>
+        <div id="regbox">
+            <form name="newUser" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+            <p>
+                <label>Username:</label>
+                <input type="text" name="username" />
+            </p>
+            
+            <p>
+                <label>Password:  &nbsp;<span class="tooltippopup" tip="Requires 8 or more characters." ><img src="/images/icon-help.png" height="18" width="18" /></label>
+                <input type="password" name="password" />
+            </p>
+            
+            <p>
+                <label>Re-type Password:</label>
+                <input type="password" name="passwordc" />
+            </p>
+            
+            <p>
+                <label>Email:</label>
+                <input type="text" name="email" />
+            </p>
 
-
-  
- <div class="modal-footer">
-<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Register" />
-  </div>  
-                
-                </form>
-            </div>
-
-			<div class="clear"></div>
-            <p style="margin-top:30px; text-align:center;"><a href="/session/login">Login</a> / <a href="/account/forgot">Forgot Password?</a></p>
-
-</body>
-</html>
+			<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Register" />
+            </form>
+      	</div>
+    </div>  
+</div>

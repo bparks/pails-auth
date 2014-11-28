@@ -1,8 +1,13 @@
 <?php
-require_once(__DIR__.'/AuthControllerBase.php');
-
-class SessionController extends AuthControllerBase
+class SessionController extends Pails\Controller
 {
+	use PailsAuthentication;
+
+	public $before_actions = array(
+		'require_login' => array('except' => array('login', 'logout')),
+		'require_anonymous' => array('except' => array('index', 'logout'))
+	);
+
 	public function index()
 	{
 		//

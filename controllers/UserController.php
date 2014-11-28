@@ -1,15 +1,16 @@
 <?php
-require_once(__DIR__.'/AuthControllerBase.php');
-
-class UserController extends AuthControllerBase
+class UserController extends Pails\Controller
 {
+	use PailsAuthentication;
+
+	public $before_actions = array(
+		'require_login' => array('except' => array('register')),
+		'require_anonymous' => array('except' => array('index', 'update'))
+	);
+
 	public function index()
 	{
-		if (!$this->is_logged_in())
-		{
-			header('Location: /session/login');
-			exit();
-		}
+		//
 	}
 	
 	public function register()

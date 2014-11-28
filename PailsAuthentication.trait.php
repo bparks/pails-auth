@@ -1,7 +1,25 @@
 <?php
-class AuthControllerBase extends Pails\Controller
+trait PailsAuthentication
 {
-	protected function is_logged_in()
+	public function require_login($redirect_url = '/session/login')
+	{
+		if (!$this->is_logged_in())
+		{
+			header('Location: '.$redirect_url);
+			exit();
+		}
+	}
+
+	public function require_anonymous($redirect_url = '/')
+	{
+		if ($this->is_logged_in())
+		{
+			header('Location: '.$redirect_url);
+			exit();
+		}
+	}
+
+	public function is_logged_in()
 	{
 		if (!isset($_SESSION["userPieUser"]) || $_SESSION["userPieUser"] == NULL)
 			return false;
@@ -21,7 +39,7 @@ class AuthControllerBase extends Pails\Controller
 		}
 	}
 
-	protected function current_user()
+	public function current_user()
 	{
 		if ($this->is_logged_in())
 			return $_SESSION["userPieUser"];

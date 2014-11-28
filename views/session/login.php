@@ -85,82 +85,48 @@ if(!empty($_POST))
 			}
 		}
 	}
-} else
+}
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Login</title>
-</head>
-<body>
-
 <div class="modal-ish">
-  <div class="modal-header">
-<h2>Sign In</h2>
-  </div>
-  <div class="modal-body">
- 
-
-               
+	<div class="modal-header">
+		<h2>Sign In</h2>
+	</div>
+	<div class="modal-body">    
         <?php
         if(!empty($_POST)):
         	if(count($errors) > 0):
         ?>
-        <div id="errors">
-        <?php errorBlock($errors); ?>
-        </div>     
+        	<div id="errors">
+        		<?php errorBlock($errors); ?>
+        	</div>
         <?php
         	endif;
         endif;
-        ?> 
-        
-        <?php if(isset($_GET['status']) && ($_GET['status']) == "success") 
-        {
-        
-        echo "<p>Your account was created successfully. Please login.</p>";
-        
-    	}
+        ?>
+        <?php
+        if(isset($_GET['status']) && ($_GET['status']) == "success"):
+        ?>
+        <p>Your account was created successfully. Please login.</p>
+        <?php
+        endif;
     	?>
+        <form name="newUser" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+        <p>
+            <label>Username:</label>
+            <input type="text"  name="username" />
+        </p>
         
-        
-                <form name="newUser" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-                <p>
-                    <label>Username:</label>
-                    <input type="text"  name="username" />
-                </p>
+        <p>
+            <label>Password:</label>
+            <input type="password" name="password" />
+        </p>
                 
-                <p>
-                     <label>Password:</label>
-                     <input type="password" name="password" />
-                </p>
-                
- <p>
-		     <input type="checkbox" name="remember_me" value="1" />	
-                     <label><small>Remember Me?</small></label>
-                </p>                
+		<p>
+		    <input type="checkbox" name="remember_me" value="1" />	
+            <label><small>Remember Me?</small></label>
+        </p>
 
-	
-                          
-
-                          </div>
-
-            
- <div class="modal-footer">
-<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Sign In" />
-  </div>
-  
+		<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Sign In" />
+        </form>
+    </div>
 </div>
-
-                </form>
-                
-        
-            <div class="clear"></div>
-<p style="margin-top:30px; text-align:center;">
-<a href="/user/register">Sign Up</a> | <a href="/account/forgot">Forgot Password?</a></p>
-            
-      
-</body>
-</html>
-
-

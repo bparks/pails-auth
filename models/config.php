@@ -6,6 +6,7 @@ require_once(__DIR__."/class.user.php");
 require_once(__DIR__."/class.mail.php");
 require_once(__DIR__."/funcs.user.php");
 require_once(__DIR__."/funcs.general.php");
+require_once(dirname(__DIR__)."/PailsAuthentication.trait.php");
 
 set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext)
 {

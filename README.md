@@ -1,23 +1,46 @@
-USERPIE
-============
+pails-auth
+==========
 
-UserPie is an open source PHP user management framework.
+An authentication (and eventually authorization) plugin for pails loosely based
+on UserPie ([userpie.com][http://userpie.com]).
 
-DOWNLOAD
-============
+Dependencies
+------------
 
-Please use the link below to download UserPie. (This way we can count the number of downloads, since GitHub does not provide this functionality.)
+* pails-activerecord
 
-http://userpie.com/latest.zip
+      pails install activerecord
 
+Installation
+------------
 
-FEATURES
-============
+In the root of a pails app, run
 
-User Login, Registration Form, Password Recovery, E-Mail Verification, Session Cookie ("Remember Me"), Change Password Form, Update E-mail Form, Twitter Bootstrap (CSS framework)
+    pails install auth
 
+If you haven't already installed the `activerecord` plugin, run the command above
 
-OTHER PROJECTS
-===============
+Configuration
+-------------
 
-RGBHexCode ColourPicker --> http://rgbhexcode.com
+Inside any controller where you want to make use of the authentication/authorization
+methods, `use` the `PailsAuthentication` [trait][http://php.net/manual/en/language.oop5.traits.php].
+
+    class DefaultController extends Pails\Controller
+    {
+    	use PailsAuthentication;
+    }
+
+You can then use the before actions `require_login` or `require_anonymous`:
+
+    $before_actions = array(
+    	'require_login' => array('except' => array('index', 'about', 'contact'))
+    );
+
+Two utility methods, `is_logged_in` and `current_user`, are also provided.
+
+Support
+-------
+
+pails-auth is a core plugin supported by Synapse Software. Contact us at
+support@synapsesoftware.com.

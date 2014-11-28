@@ -104,76 +104,39 @@ if(!empty($_POST))
 		}
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Resend Activation email</title>
-</head>
-<body>
-
 <div class="modal-ish">
-  <div class="modal-header">
- 	 <h2>Resend Activation E-mail</h2>
-  </div>
-  <div class="modal-body"> 
- 
-    <?php
-    if(!empty($_POST) || !empty($_GET["confirm"]) || !empty($_GET["deny"]) && $emailActivation)
-    {     
-	
-			if(count($errors) > 0)
-            {
+	<div class="modal-header">
+		<h2>Resend Activation E-mail</h2>
+	</div>
+	<div class="modal-body">
+	    <?php
+	    if(!empty($_POST) || !empty($_GET["confirm"]) || !empty($_GET["deny"])):
+			if(count($errors) > 0):
 		?>
-        	<div id="errors">
-            	<?php errorBlock($errors); ?>
-            </div> 
-        <?php
-            }
-			else
-			{
+	    	<div id="errors">
+	        	<?php errorBlock($errors); ?>
+	        </div> 
+	    <?php
+			else:
 		?>
-            <div id="success">
-            
-                <p><?php echo $success_message; ?></p>
-            
-            </div>
-        <?php
-			}
-        }
-        ?> 
-        <form name="resendActivation" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-        
-        
-        <p>
-            <label>username:</label>
-            <input type="text" name="username" />
-        </p>     
-            
-         <p>
-            <label>email:</label>
-            <input type="text" name="email" />
-         </p>    
-    
-    <p><input type="submit" class="btn btn-primary btn-large" name="activate" id="newfeedform" value="Resend" /></p>
-
-            
-        </form>
-	       </div>           
-      </div>
-
-
-  
-  
-                
-                </form>
-            </div>
-
-			<div class="clear"></div>
-            <p style="margin-top:30px; text-align:center;"><a href="/user/register">Register</a> / <a href="/session/login">Login</a> / <a href="/account/forgot">Forgot Password?</a> / <a href="/">Home Page</a></p>
-
-
-</body>
-</html>
-
-
+	        <div id="success">
+	        	<p><?php echo $success_message; ?></p>
+	    	</div>
+	    <?php
+			endif;
+	    endif;
+	    ?> 
+	    <form name="resendActivation" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+		<p>
+		    <label>username:</label>
+		    <input type="text" name="username" />
+		</p>     
+		    
+		<p>
+			<label>email:</label>
+			<input type="text" name="email" />
+		</p>
+	    <p><input type="submit" class="btn btn-primary btn-large" name="activate" id="newfeedform" value="Resend" /></p>
+		</form>
+	</div>           
+</div>
