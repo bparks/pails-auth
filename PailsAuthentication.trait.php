@@ -1,7 +1,7 @@
 <?php
 trait PailsAuthentication
 {
-	public function require_login($redirect_url = '/session/login')
+	protected function require_login($redirect_url = '/session/login')
 	{
 		if (!$this->is_logged_in())
 		{
@@ -10,7 +10,7 @@ trait PailsAuthentication
 		}
 	}
 
-	public function require_anonymous($redirect_url = '/')
+	protected function require_anonymous($redirect_url = '/')
 	{
 		if ($this->is_logged_in())
 		{
@@ -19,7 +19,7 @@ trait PailsAuthentication
 		}
 	}
 
-	public function is_logged_in()
+	protected function is_logged_in()
 	{
 		if (!isset($_SESSION["userPieUser"]) || $_SESSION["userPieUser"] == NULL)
 			return false;
@@ -39,7 +39,7 @@ trait PailsAuthentication
 		}
 	}
 
-	public function current_user()
+	protected function current_user()
 	{
 		if ($this->is_logged_in())
 			return $_SESSION["userPieUser"];
