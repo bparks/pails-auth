@@ -2,14 +2,15 @@ pails-auth
 ==========
 
 An authentication (and eventually authorization) plugin for pails loosely based
-on UserPie ([userpie.com][http://userpie.com]).
+on UserPie ([userpie.com][userpie]).
 
 Dependencies
 ------------
 
 * pails-activerecord
-
-      pails install activerecord
+  ```sh
+  pails install activerecord
+  ```
 
 Installation
 ------------
@@ -24,18 +25,22 @@ Configuration
 -------------
 
 Inside any controller where you want to make use of the authentication/authorization
-methods, `use` the `PailsAuthentication` [trait][http://php.net/manual/en/language.oop5.traits.php].
+methods, `use` the `PailsAuthentication` [trait][trait].
 
-    class DefaultController extends Pails\Controller
-    {
-    	use PailsAuthentication;
-    }
+```php
+class DefaultController extends Pails\Controller
+{
+	use PailsAuthentication;
+}
+```
 
 You can then use the before actions `require_login` or `require_anonymous`:
 
-    $before_actions = array(
-    	'require_login' => array('except' => array('index', 'about', 'contact'))
-    );
+```php
+$before_actions = array(
+	'require_login' => array('except' => array('index', 'about', 'contact'))
+);
+```
 
 Two utility methods, `is_logged_in` and `current_user`, are also provided.
 
@@ -44,3 +49,6 @@ Support
 
 pails-auth is a core plugin supported by Synapse Software. Contact us at
 support@synapsesoftware.com.
+
+[userpie]: http://userpie.com
+[trait]: http://php.net/manual/en/language.oop5.traits.php
