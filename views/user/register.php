@@ -1,8 +1,8 @@
 <?php
-	/* 
+	/*
 		Below is a very simple example of how to process a new user.
 		 Some simple validation (ideally more is needed).
-		
+
 		The first goal is to check for empty / null data, to reduce workload here we let the user class perform it's own internal checks, just in case they are missed.
 	*/
 
@@ -14,10 +14,10 @@ if(!empty($_POST))
 		$username = trim($_POST["username"]);
 		$password = trim($_POST["password"]);
 		$confirm_pass = trim($_POST["passwordc"]);
-	
+
 		//Perform some validation
 		//Feel free to edit / change as required
-		
+
 		if(minMaxRange(5,25,$username))
 		{
 			$errors[] = lang("ACCOUNT_USER_CHAR_LIMIT",array(5,25));
@@ -36,15 +36,15 @@ if(!empty($_POST))
 		}
 		//End data validation
 		if(count($errors) == 0)
-		{	
+		{
 				//Construct a user object
 				$user = User::register($username,$password,$email);
-				
+
 				//Checking this flag tells us whether there were any errors such as possible data duplication occured
 				if(!$user->status)
 				{
 					if($user->username_taken) $errors[] = lang("ACCOUNT_USERNAME_IN_USE",array($username));
-					if($user->email_taken) 	  $errors[] = lang("ACCOUNT_EMAIL_IN_USE",array($email));		
+					if($user->email_taken) 	  $errors[] = lang("ACCOUNT_EMAIL_IN_USE",array($email));
 				}
 				else
 				{
@@ -56,7 +56,7 @@ if(!empty($_POST))
 					}
 				}
 		}
-	   if(count($errors) == 0) 
+	   if(count($errors) == 0)
 	   {
 		        if($emailActivation)
 		        {
@@ -82,22 +82,22 @@ if(!empty($_POST))
         </div>
 
         <div id="regbox">
-            <form name="newUser" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+            <form name="newUser" action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post">
             <p>
                 <label>Username:</label>
                 <input type="text" name="username" />
             </p>
-            
+
             <p>
                 <label>Password:  &nbsp;<span class="tooltippopup" tip="Requires 8 or more characters." ><img src="/images/icon-help.png" height="18" width="18" /></label>
                 <input type="password" name="password" />
             </p>
-            
+
             <p>
                 <label>Re-type Password:</label>
                 <input type="password" name="passwordc" />
             </p>
-            
+
             <p>
                 <label>Email:</label>
                 <input type="text" name="email" />
@@ -106,5 +106,5 @@ if(!empty($_POST))
 			<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Register" />
             </form>
       	</div>
-    </div>  
+    </div>
 </div>

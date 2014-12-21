@@ -1,5 +1,5 @@
 <?php
-	/* 
+	/*
 		Below is a very simple example of how to process a login request.
 		Some simple validation (ideally more is needed).
 	*/
@@ -22,7 +22,7 @@ if(!empty($_POST))
 	{
 		$errors[] = lang("ACCOUNT_SPECIFY_PASSWORD");
 	}
-	
+
 	//End data validation
 	if(count($errors) == 0)
 	{
@@ -34,7 +34,7 @@ if(!empty($_POST))
 		else
 		{
 			$userdetails = fetchUserDetails($username);
-		
+
 			//See if the user's account is activation
 			if($userdetails->active==0)
 			{
@@ -53,7 +53,7 @@ if(!empty($_POST))
 				else
 				{
 					//passwords match! we're good to go'
-					
+
 					//Construct a new logged in user object
 					//Transfer some db data to the session object
 					$loggedInUser = new loggedInUser();
@@ -64,7 +64,7 @@ if(!empty($_POST))
 					$loggedInUser->clean_username = $userdetails->username_clean;
 					$loggedInUser->remember_me = $remember_choice;
 					$loggedInUser->remember_me_sessid = generateHash(uniqid(rand(), true));
-					
+
 					//Update last sign in
 					$loggedInUser->updatelast_sign_in();
 
@@ -78,7 +78,7 @@ if(!empty($_POST))
 						$session->save();
 						setcookie("userPieUser", $loggedInUser->remember_me_sessid, time()+604800, '/');
 					}
-					
+
 					//Redirect to user account page
 					header("Location: /");
 				}
@@ -91,7 +91,7 @@ if(!empty($_POST))
 	<div class="modal-header">
 		<h2>Sign In</h2>
 	</div>
-	<div class="modal-body">    
+	<div class="modal-body">
         <?php
         if(!empty($_POST)):
         	if(count($errors) > 0):
@@ -110,19 +110,19 @@ if(!empty($_POST))
         <?php
         endif;
     	?>
-        <form name="newUser" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+        <form name="newUser" action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post">
         <p>
             <label>Username:</label>
             <input type="text"  name="username" />
         </p>
-        
+
         <p>
             <label>Password:</label>
             <input type="password" name="password" />
         </p>
-                
+
 		<p>
-		    <input type="checkbox" name="remember_me" value="1" />	
+		    <input type="checkbox" name="remember_me" value="1" />
             <label><small>Remember Me?</small></label>
         </p>
 
