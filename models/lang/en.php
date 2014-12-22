@@ -3,13 +3,13 @@
 		UserPie Langauge File.
 		Language: English.
 	*/
-	
+
 	/*
 		%m1% - Dymamic markers which are replaced at run time by the relevant index.
 	*/
 
 	$lang = array();
-	
+
 	//Account
 	$lang = array_merge($lang,array(
 		"ACCOUNT_SPECIFY_USERNAME" 				=> "Please enter your username",
@@ -29,17 +29,17 @@
 		"ACCOUNT_LINK_ALREADY_SENT"				=> "An activation email has already been sent to this email address in the last %m1% hour(s)",
 		"ACCOUNT_NEW_ACTIVATION_SENT"			=> "We have emailed you a new activation link, please check your email",
 		"ACCOUNT_NOW_ACTIVE"					=> "Your account is now active",
-		"ACCOUNT_SPECIFY_NEW_PASSWORD"			=> "Please enter your new password",	
-		"ACCOUNT_NEW_PASSWORD_LENGTH"			=> "Your new password must be no fewer than %m1% characters or greater than %m2%",	
-		"ACCOUNT_PASSWORD_INVALID"				=> "Current password doesn't match the one we have on record",	
+		"ACCOUNT_SPECIFY_NEW_PASSWORD"			=> "Please enter your new password",
+		"ACCOUNT_NEW_PASSWORD_LENGTH"			=> "Your new password must be no fewer than %m1% characters or greater than %m2%",
+		"ACCOUNT_PASSWORD_INVALID"				=> "Current password doesn't match the one we have on record",
 		"ACCOUNT_EMAIL_TAKEN"					=> "This email address is already taken by another user",
 		"ACCOUNT_DETAILS_UPDATED"				=> "Your account details have been updated",
-		"ACTIVATION_MESSAGE"					=> "%m1%activate-account.php?token=%m2%",							
+		"ACTIVATION_MESSAGE"					=> "%m1%account/activate?token=%m2%",							
 		"ACCOUNT_REGISTRATION_COMPLETE_TYPE1"	=> "You have successfully registered. You can now login <a href=\"/session/login\">here</a>.",
-		"ACCOUNT_REGISTRATION_COMPLETE_TYPE2"	=> "You have successfully registered. You will soon receive an activation email. 
+		"ACCOUNT_REGISTRATION_COMPLETE_TYPE2"	=> "You have successfully registered. You will soon receive an activation email.
 													You must activate your account before logging in.",
 	));
-	
+
 	//Forgot password
 	$lang = array_merge($lang,array(
 		"FORGOTPASS_INVALID_TOKEN"				=> "Invalid token",
@@ -48,7 +48,7 @@
 		"FORGOTPASS_REQUEST_EXISTS"				=> "There is already a outstanding lost password request on this account. Please recheck your inbox and spam folders for your temporary password.",
 		"FORGOTPASS_REQUEST_SUCCESS"			=> "We have emailed you instructions on how to regain access to your account",
 	));
-	
+
 	//Miscellaneous
 	$lang = array_merge($lang,array(
 		"CONFIRM"								=> "Confirm",
