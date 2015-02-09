@@ -58,13 +58,8 @@ if(!empty($_POST))
 		}
 	   if(count($errors) == 0)
 	   {
-		        if($emailActivation)
-		        {
-		             $message = lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
-		        } else {
-		             $message = lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
-		        }
-		        //header("Location: ");
+           $message = lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
+		       //header("Location: ");
 	   }
 	   else
 	   {
