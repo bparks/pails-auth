@@ -34,7 +34,7 @@
 		"ACCOUNT_PASSWORD_INVALID"				=> "Current password doesn't match the one we have on record",
 		"ACCOUNT_EMAIL_TAKEN"					=> "This email address is already taken by another user",
 		"ACCOUNT_DETAILS_UPDATED"				=> "Your account details have been updated",
-		"ACTIVATION_MESSAGE"					=> "%m1%account/activate?token=%m2%",							
+		"ACTIVATION_MESSAGE"					=> "%m1%account/activate/%m2%",							
 		"ACCOUNT_REGISTRATION_COMPLETE_TYPE1"	=> "You have successfully registered. You can now login <a href=\"/session/login\">here</a>.",
 		"ACCOUNT_REGISTRATION_COMPLETE_TYPE2"	=> "You have successfully registered. You will soon receive an activation email.
 													You must activate your account before logging in.",
