@@ -11,6 +11,15 @@ class User extends ActiveRecord\Model
 	static $table_name = "users";
 	static $primary_key = "user_id";
 
+	static $belongs_to = array(
+		array('group')
+	);
+
+	static $has_many = array(
+		//array('groups'),
+		array('permissions')
+	);
+
 	public $user_active = 0;
 	private $clean_email;
 	public $status = false;
@@ -48,6 +57,11 @@ class User extends ActiveRecord\Model
 			$user->status = true;
 		}
 		return $user;
+	}
+
+	public function has_permission($permission)
+	{
+		return $this->group->has_permission($permission) || Permission::user_has($this->username, $permission);
 	}
 
 	public function userPieAddUser()

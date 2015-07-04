@@ -19,6 +19,24 @@ trait PailsAuthentication
 		}
 	}
 
+	protected function require_permission($permissions)
+	{
+		\Pails\Application::log('This page requires '.implode(', ', $permissions).'.');
+		if (is_array($permissions))
+		{
+			foreach ($permissions as $perm)
+			{
+				if (!User::find($this->current_user()->user_id)->has_permission($permissions))
+					return false;
+			}
+			return true;
+		}
+		else
+		{
+			return User::find($this->current_user()->user_id)->has_permission($permissions);
+		}
+	}
+
 	protected function is_logged_in()
 	{
 		if (!isset($_SESSION["userPieUser"]) || $_SESSION["userPieUser"] == NULL)

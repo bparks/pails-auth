@@ -8,7 +8,7 @@
 	//--------------------------------------------------------------------------
 
 	
-	$db_table_prefix = "userpie_";
+	//$db_table_prefix = "userpie_";
 
 	$websiteName = "";
 	$websiteUrl = "";

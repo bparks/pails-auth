@@ -1,0 +1,10 @@
+{
+	"name": "pails/auth",
+	"autoload": {
+		"files": ["models/config.php"]
+	},
+	"require": {
+		"pails/pails": "dev-master",
+		"php-activerecord/php-activerecord": "dev-develop"
+	}
+}

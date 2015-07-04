@@ -2,6 +2,8 @@
 require_once(__DIR__."/settings.php");
 require_once(__DIR__."/Session.php");
 require_once(__DIR__."/User.php");
+require_once(__DIR__."/Group.php");
+require_once(__DIR__."/Permission.php");
 require_once(__DIR__."/class.user.php");
 require_once(__DIR__."/class.mail.php");
 require_once(__DIR__."/funcs.user.php");
@@ -14,6 +16,9 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext)
 }, E_ERROR | E_WARNING);
 
 function auth_config($app) {
+	global $USER_PERMISSIONS;
+	global $GROUP_PERMISSIONS;
+
 	$remember_me_length = 604800;
 	if(isset($_SESSION["userPieUser"]) && is_object($_SESSION["userPieUser"]))
 		$loggedInUser = $_SESSION["userPieUser"];
@@ -38,4 +43,19 @@ function auth_config($app) {
 		$loggedInUser = NULL;
 	}
 	$_SESSION["userPieUser"] = $loggedInUser;
+
+	Permission::init_permissions(
+		isset($USER_PERMISSIONS) ? $USER_PERMISSIONS : array(),
+		isset($GROUP_PERMISSIONS) ? $GROUP_PERMISSIONS : array()
+	);
+
+	Permission::grant_group('admin', 'manage_users');
+
+	if (defined('ADMIN_MENU_SLUG'))
+	{
+		Menu::add_static_item(ADMIN_MENU_SLUG, 'Users', '/user', array(
+			'Groups' => '/group',
+			'Permissions' => '/permission'
+		));
+	}
 }
