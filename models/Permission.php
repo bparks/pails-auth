@@ -31,7 +31,7 @@ class Permission extends ActiveRecord\Model
 		self::grant('groups', $group_name, $permission);
 	}
 
-	private static function grant($stack, $user_name, $permission)
+	public static function grant($stack, $user_name, $permission)
 	{
 		self::$initialized = true;
 
@@ -44,14 +44,14 @@ class Permission extends ActiveRecord\Model
 			self::$permissions[$stack][$user_name][] = $permission;
 	}
 
-	private static function user_has($user_name, $permission)
+	public static function user_has($user_name, $permission)
 	{
 		return isset(self::$permissions['users'][$user_name]) &&
 			is_array(self::$permissions['users'][$user_name]) &&
 			in_array($permission, self::$permissions['users'][$user_name]);
 	}
 
-	private static function group_has($group_name, $permission)
+	public static function group_has($group_name, $permission)
 	{
 		return isset(self::$permissions['groups'][$group_name]) &&
 			is_array(self::$permissions['groups'][$group_name]) &&
