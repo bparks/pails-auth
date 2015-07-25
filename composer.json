@@ -3,8 +3,14 @@
 	"autoload": {
 		"files": ["models/config.php"]
 	},
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/bparks/php-activerecord"
+        }
+    ],
 	"require": {
-		"pails/pails": "dev-master",
+		"pails/pails": "^0.2.5",
 		"php-activerecord/php-activerecord": "dev-develop"
 	}
 }
