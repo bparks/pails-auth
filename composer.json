@@ -10,7 +10,7 @@
         }
     ],
 	"require": {
-		"pails/pails": "^0.2.5",
+		"pails/pails": "*",
 		"php-activerecord/php-activerecord": "dev-develop"
 	}
 }
