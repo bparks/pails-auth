@@ -26,7 +26,7 @@ trait PailsAuthentication
 			\Pails\Application::log('This page requires '.implode(', ', $permissions).'.');
 			foreach ($permissions as $perm)
 			{
-				if (!User::find($this->current_user()->user_id)->has_permission($permissions))
+				if (!$this->current_user()->has_permission($permissions))
 					return false;
 			}
 			return true;
@@ -34,7 +34,7 @@ trait PailsAuthentication
 		else
 		{
 			\Pails\Application::log('This page requires '.$permissions.'.');
-			return User::find($this->current_user()->user_id)->has_permission($permissions);
+			return $this->current_user()->has_permission($permissions);
 		}
 	}
 

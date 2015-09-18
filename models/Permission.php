@@ -57,7 +57,7 @@ class Permission extends ActiveRecord\Model
 
 	public static function group_has($group_name, $permission)
 	{
-		$user_name = strtolower($user_name);
+		$group_name = strtolower($group_name);
 		
 		return isset(self::$permissions['groups'][$group_name]) &&
 			is_array(self::$permissions['groups'][$group_name]) &&
