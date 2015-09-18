@@ -61,7 +61,7 @@ class User extends ActiveRecord\Model
 
 	public function has_permission($permission)
 	{
-		return $this->group->has_permission($permission) || Permission::user_has($this->username, $permission);
+		return $this->group->has_permission($permission) || Permission::user_has(strtolower($this->username), $permission);
 	}
 
 	public function userPieAddUser()

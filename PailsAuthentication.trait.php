@@ -60,7 +60,7 @@ trait PailsAuthentication
 	protected function current_user()
 	{
 		if ($this->is_logged_in())
-			return $_SESSION["userPieUser"];
+			return User::find($_SESSION["userPieUser"]->user_id);
 		return null;
 	}
 }
