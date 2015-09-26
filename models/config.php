@@ -4,7 +4,6 @@ require_once(__DIR__."/Session.php");
 require_once(__DIR__."/User.php");
 require_once(__DIR__."/Group.php");
 require_once(__DIR__."/Permission.php");
-require_once(__DIR__."/class.user.php");
 require_once(__DIR__."/class.mail.php");
 require_once(__DIR__."/funcs.user.php");
 require_once(__DIR__."/funcs.general.php");

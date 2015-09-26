@@ -52,7 +52,7 @@ trait PailsAuthentication
 		else
 		{
 			//No result returned. kill the user session. user banned or deleted
-			$_SESSION["userPieUser"]->userLogOut();
+			destroySession("userPieUser");
 		
 			return false;
 		}
