@@ -36,6 +36,9 @@
 		    <input type="checkbox" name="remember_me" value="1" />
             <label><small>Remember Me?</small></label>
         </p>
+				<p>
+					<a href="/account/forgot">Forgot Password?</a> | <a href="/user/register">Register</a>
+				</p>
 
 		<input type="submit" class="btn btn-primary" name="new" id="newfeedform" value="Sign In" />
         </form>
