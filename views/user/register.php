@@ -84,7 +84,7 @@ if(!empty($_POST))
             </p>
 
             <p>
-                <label>Password:  &nbsp;<span class="tooltippopup" tip="Requires 8 or more characters." ><img src="/images/icon-help.png" height="18" width="18" /></label>
+                <label>Password&nbsp;<span title="Requires 8 or more characters." class="glyphicon glyphicon-question-sign"></span>&nbsp;:</label>
                 <input type="password" name="password" />
             </p>
 

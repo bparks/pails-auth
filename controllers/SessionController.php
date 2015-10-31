@@ -12,7 +12,7 @@ class SessionController extends Pails\Controller
 	{
 		//
 	}
-	
+
 	public function login()
 	{
 		if(!empty($_POST))
@@ -74,7 +74,7 @@ class SessionController extends Pails\Controller
 							//Update last sign in
 							$loggedInUser->updatelast_sign_in();
 
-							$_SESSION["userPieUser"] = $loggedInUser;
+							$_SESSION[AUTH_COOKIE_NAME] = $loggedInUser;
 							if($loggedInUser->remember_me == 1) {
 								$session = new Session(array(
 									"session_start" => time(),
@@ -82,7 +82,7 @@ class SessionController extends Pails\Controller
 									"session_id" => $loggedInUser->remember_me_sessid
 								));
 								$session->save();
-								setcookie("userPieUser", $loggedInUser->remember_me_sessid, time()+604800, '/');
+								setcookie(AUTH_COOKIE_NAME, $loggedInUser->remember_me_sessid, time()+604800, '/');
 							}
 
 							//Redirect to user account page
@@ -95,7 +95,7 @@ class SessionController extends Pails\Controller
 			$this->model = $errors;
 		}
 	}
-	
+
 	public function logout()
 	{
 		if($this->is_logged_in())

@@ -5,10 +5,10 @@
 	<div class="modal-body">
         <?php
         if(!empty($_POST)):
-        	if(count($errors) > 0):
+        	if(isset($this->model) && is_array($this->model) && count($this->model) > 0):
         ?>
         	<div id="errors">
-        		<?php errorBlock($errors); ?>
+        		<?php errorBlock($this->model); ?>
         	</div>
         <?php
         	endif;
