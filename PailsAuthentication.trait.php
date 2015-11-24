@@ -29,14 +29,22 @@ trait PailsAuthentication
 			foreach ($permissions as $perm)
 			{
 				if (!$this->current_user()->has_permission($perm))
-					return false;
+                {
+					header('Location: /session/unauthorized');
+                    exit();
+                }
 			}
 			return true;
 		}
 		else
 		{
 			\Pails\Application::log('This page requires '.$permissions.'.');
-			return $this->current_user()->has_permission($permissions);
+			if (!$this->current_user()->has_permission($permissions))
+            {
+                header('Location: /session/unauthorized');
+                exit();
+            }
+            return true;
 		}
 	}
 

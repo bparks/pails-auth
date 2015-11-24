@@ -13,6 +13,11 @@ class SessionController extends Pails\Controller
 		//
 	}
 
+    public function unauthorized()
+    {
+        //
+    }
+
 	public function login()
 	{
 		if(!empty($_POST))
