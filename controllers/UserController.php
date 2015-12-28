@@ -12,6 +12,7 @@ class UserController extends Pails\Controller
 	public function index()
 	{
 		$this->model = User::all();
+        return $this->view();
 	}
 
 	public function toggle_active($args) {
@@ -19,16 +20,16 @@ class UserController extends Pails\Controller
 		$user = User::find($args[0]);
 		$user->active = !$user->active;
 		$user->save();
-		return true;
+		return $this->content('true');
 	}
-	
+
 	public function register()
 	{
-		//
+		return $this->view();
 	}
-	
+
 	public function update()
 	{
-		//
+		return $this->view();
 	}
 }

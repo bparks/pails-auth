@@ -41,13 +41,6 @@
 		return $salt . sha1($salt . $plainText);
 	}
 
-	function replaceDefaultHook($str)
-	{
-		global $default_hooks,$default_replace;
-
-		return (str_replace($default_hooks,$default_replace,$str));
-	}
-
 	function getUniqueCode($length = "")
 	{
 		$code = md5(uniqid(rand(), true));
@@ -138,10 +131,10 @@ function destroySession($name)
 
 function updateSessionObj()
 {
-	global $loggedInUser,$db,$db_table_prefix;
-
-	$newObj = serialize($loggedInUser);
-	$db->sql_query("UPDATE ".$db_table_prefix."sessions SET session_data = '".$newObj."' WHERE session_id = '".$loggedInUser->remember_me_sessid."'");
+    $newObj = serialize($_SESSION[AUTH_COOKIE_NAME]);
+    $session = Session::find_by_session_id($_SESSION[AUTH_COOKIE_NAME]->remember_me_sessid);
+    $session->session_data = $newObj;
+    $session->save();
 }
 
 ?>

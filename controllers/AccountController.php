@@ -10,7 +10,7 @@ class AccountController extends Pails\Controller
 
 	public function index()
 	{
-		//
+		return $this->view();
 	}
 
 	public function activate($opts = array())
@@ -20,9 +20,9 @@ class AccountController extends Pails\Controller
 		//Get token param
 		if(count($opts) > 0)
 		{
-				
+
 				$token = $opts[0];
-				
+
 				if(!isset($token))
 				{
 					$this->model[] = lang("FORGOTPASS_INVALID_TOKEN");
@@ -44,20 +44,22 @@ class AccountController extends Pails\Controller
 		{
 			$this->model[] = lang("FORGOTPASS_INVALID_TOKEN");
 		}
+
+        return $this->view();
 	}
-	
+
 	public function forgot()
 	{
-		//
+		return $this->view();
 	}
-	
+
 	public function password()
 	{
-		//
+		return $this->view();
 	}
-	
+
 	public function resend()
 	{
-		//
+		return $this->view();
 	}
 }

@@ -30,40 +30,23 @@ if(!empty($_GET["confirm"]))
 
 		$userdetails = fetchUserDetails(NULL,$token);
 
-		$mail = new userPieMail();
+        try {
+            $mail = AuthMailer::lost_password($userdetails, $rand_pass);
+            $mail->deliver();
+            if(!updatepasswordFromToken($secure_pass,$token))
+            {
+                $errors[] = lang("SQL_ERROR");
+            }
+            else
+            {
+                //Might be wise if this had a time delay to prevent a flood of requests.
+                flagLostpasswordRequest($userdetails->username_clean,0);
 
-		//Setup our custom hooks
-		$hooks = array(
-				"searchStrs" => array("#GENERATED-PASS#","#USERNAME#"),
-				"subjectStrs" => array($rand_pass,$userdetails->username)
-		);
-
-		if(!$mail->newTemplateMsg("your-lost-password.txt",$hooks))
-		{
-			$errors[] = lang("MAIL_TEMPLATE_BUILD_ERROR");
-		}
-		else
-		{
-			if(!$mail->sendMail($userdetails->email,"Your new password"))
-			{
-					$errors[] = lang("MAIL_ERROR");
-			}
-			else
-			{
-					if(!updatepasswordFromToken($secure_pass,$token))
-					{
-						$errors[] = lang("SQL_ERROR");
-					}
-					else
-					{
-						//Might be wise if this had a time delay to prevent a flood of requests.
-						flagLostpasswordRequest($userdetails->username_clean,0);
-
-						$success_message  = lang("FORGOTPASS_NEW_PASS_EMAIL");
-						//header("Location: /");
-					}
-			}
-		}
+                $success_message  = lang("FORGOTPASS_NEW_PASS_EMAIL");
+            }
+        } catch (Exception $e) {
+            $errors[] = lang("MAIL_ERROR");
+        }
 
 	}
 }
@@ -150,35 +133,16 @@ if(!empty($_POST))
 
 					//We use the activation token again for the url key it gets regenerated everytime it's used.
 
-					$mail = new userPieMail();
-
 					$confirm_url = 'http://'.$_SERVER['HTTP_HOST']."/account/forgot?confirm=".$userdetails->activationtoken;
 					$deny_url = 'http://'.$_SERVER['HTTP_HOST']."/account/forgot?deny=".$userdetails->activationtoken;
 
-					//Setup our custom hooks
-					$hooks = array(
-						"searchStrs" => array("#CONFIRM-URL#","#DENY-URL#","#USERNAME#"),
-						"subjectStrs" => array($confirm_url,$deny_url,$userdetails->username)
-					);
-
-					if(!$mail->newTemplateMsg("lost-password-request.txt",$hooks))
-					{
-						$errors[] = lang("MAIL_TEMPLATE_BUILD_ERROR");
-					}
-					else
-					{
-						if(!$mail->sendMail($userdetails->email,"Your Password Reset Request"))
-						{
-							$errors[] = lang("MAIL_ERROR");
-						}
-						else
-						{
-							//Update the DB to show this account has an outstanding request
-							flagLostpasswordRequest($username,1);
-
-							$success_message = lang("FORGOTPASS_REQUEST_SUCCESS");
-						}
-					}
+                    try {
+                        $mail = AuthMailer::lost_password_request($userdetails, $confirm_url, $deny_url);
+                        $mail->deliver();
+                        $success_message = lang("FORGOTPASS_REQUEST_SUCCESS");
+                    } catch (Exception $e) {
+                        $errors[] = lang("MAIL_ERROR");
+                    }
 				}
 			}
 		}

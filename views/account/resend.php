@@ -1,8 +1,8 @@
 <?php
-	/* 
+	/*
 		Below process a new activation link for a user, as they first activation email may have never arrived.
 	*/
-	
+
 $errors = array();
 $success_message = "";
 
@@ -12,10 +12,10 @@ if(!empty($_POST))
 {
 		$email = $_POST["email"];
 		$username = $_POST["username"];
-		
+
 		//Perform some validation
 		//Feel free to edit / change as required
-		
+
 		if(trim($email) == "")
 		{
 			$errors[] = lang("ACCOUNT_SPECIFY_EMAIL");
@@ -25,7 +25,7 @@ if(!empty($_POST))
 		{
 			$errors[] = lang("ACCOUNT_INVALID_EMAIL");
 		}
-		
+
 		if(trim($username) == "")
 		{
 			$errors[] =  lang("ACCOUNT_SPECIFY_USERNAME");
@@ -34,8 +34,8 @@ if(!empty($_POST))
 		{
 			$errors[] = lang("ACCOUNT_INVALID_USERNAME");
 		}
-		
-		
+
+
 		if(count($errors) == 0)
 		{
 			//Check that the username / email are associated to the same account
@@ -46,7 +46,7 @@ if(!empty($_POST))
 			else
 			{
 				$userdetails = fetchUserDetails($username);
-			
+
 				//See if the user's account is activation
 				if($userdetails->active==1)
 				{
@@ -64,39 +64,22 @@ if(!empty($_POST))
 					{
 						//For security create a new activation url;
 						$new_activation_token = generateactivationtoken();
-						
+
 						if(!updatelast_activation_request($new_activation_token,$username,$email))
 						{
 							$errors[] = lang("SQL_ERROR");
 						}
 						else
 						{
-							$mail = new userPieMail();
-							
 							$activation_url = 'http://'.$_SERVER['HTTP_HOST']."/account/activate?token=".$new_activation_token;
-						
-							//Setup our custom hooks
-							$hooks = array(
-								"searchStrs" => array("#ACTIVATION-MESSAGE","#USERNAME#"),
-								"subjectStrs" => array($activation_url,$userdetails->username)
-							);
-							
-							if(!$mail->newTemplateMsg("resend-activation.txt",$hooks))
-							{
-								$errors[] = lang("MAIL_TEMPLATE_BUILD_ERROR");
-							}
-							else
-							{
-								if(!$mail->sendMail($userdetails->email,"Activate your UserPie Account"))
-								{
-									$errors[] = lang("MAIL_ERROR");
-								}
-								else
-								{
-									//Success, user details have been updated in the db now mail this information out.
-									$success_message = lang("ACCOUNT_NEW_ACTIVATION_SENT");
-								}
-							}
+
+                            try {
+                                $mail = AuthMailer::resend_activation($userdetails, $activation_url);
+                                $mail->deliver();
+                                $success_message = lang("ACCOUNT_NEW_ACTIVATION_SENT");
+                            } catch (Exception $e) {
+                                $errors[] = lang("MAIL_ERROR");
+                            }
 						}
 					}
 				}
@@ -115,7 +98,7 @@ if(!empty($_POST))
 		?>
 	    	<div id="errors">
 	        	<?php errorBlock($errors); ?>
-	        </div> 
+	        </div>
 	    <?php
 			else:
 		?>
@@ -125,18 +108,18 @@ if(!empty($_POST))
 	    <?php
 			endif;
 	    endif;
-	    ?> 
-	    <form name="resendActivation" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+	    ?>
+	    <form name="resendActivation" action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post">
 		<p>
 		    <label>username:</label>
 		    <input type="text" name="username" />
-		</p>     
-		    
+		</p>
+
 		<p>
 			<label>email:</label>
 			<input type="text" name="email" />
 		</p>
 	    <p><input type="submit" class="btn btn-primary btn-large" name="activate" id="newfeedform" value="Resend" /></p>
 		</form>
-	</div>           
+	</div>
 </div>

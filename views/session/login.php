@@ -33,7 +33,7 @@
         </p>
 
 		<p>
-		    <input type="checkbox" name="remember_me" value="1" />
+		    <input type="checkbox" name="remember_me" value="1" checked />
             <label><small>Remember Me?</small></label>
         </p>
 				<p>

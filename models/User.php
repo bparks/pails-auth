@@ -83,52 +83,36 @@ class User extends ActiveRecord\Model
 			//User must activate their account first
 			$this->user_active = 0;
 
-			$mail = new userPieMail();
-
 			//Build the activation message
 			$activation_message = lang("ACTIVATION_MESSAGE",array('http://'.$_SERVER['HTTP_HOST'].'/',$this->activation_token));
 
-			//Define more if you want to build larger structures
-			$hooks = array(
-				"searchStrs" => array("#ACTIVATION-MESSAGE","#ACTIVATION-KEY","#USERNAME#"),
-				"subjectStrs" => array($activation_message,$this->activation_token,$this->unclean_username)
-			);
+            //Copy some poorly-named attributes into ones that match the DB
+            $this->username = $this->unclean_username;
+            $this->username_clean = $this->clean_username;
+            $this->password = $secure_pass;
+            $this->email = $this->clean_email;
+            $this->activationtoken = $this->activation_token;
 
-			/* Build the template - Optional, you can just use the sendMail function
-			Instead to pass a message. */
-			if(!$mail->newTemplateMsg("new-registration.txt",$hooks))
-			{
-				$this->mail_failure = true;
-			}
-			else
-			{
-				//Send the mail. Specify users email here and subject.
-				//SendMail can have a third parementer for message if you do not wish to build a template.
+            try {
+                $mail = AuthMailer::new_registration($this, $activation_message);
+                $mail->deliver();
+            } catch (Exception $e) {
+                \Pails\Application::log($e->getMessage());
+                $this->mail_failure = true;
+            }
 
-				if(!$mail->sendMail($this->clean_email,"Welcome"))
-				{
-					$this->mail_failure = true;
-				}
-			}
+            if(!$this->mail_failure)
+            {
+                $this->last_activation_request = time();
+                $this->lostpasswordrequest = 0;
+                $this->active = $this->user_active;
+                $this->group_id = 1;
+                $this->sign_up_date = time();
+                $this->last_sign_in = 0;
+                $this->save();
 
-
-			if(!$this->mail_failure)
-			{
-				$this->username = $this->unclean_username;
-				$this->username_clean = $this->clean_username;
-				$this->password = $secure_pass;
-				$this->email = $this->clean_email;
-				$this->activationtoken = $this->activation_token;
-				$this->last_activation_request = time();
-				$this->lostpasswordrequest = 0;
-				$this->active = $this->user_active;
-				$this->group_id = 1;
-				$this->sign_up_date = time();
-				$this->last_sign_in = 0;
-				$this->save();
-
-				return true;
-			}
+                return true;
+            }
 		}
 	}
 
@@ -194,44 +178,44 @@ class User extends ActiveRecord\Model
 	}
 
 	//Fetch all user group information
-	public function groupID()
-	{
-		global $db,$db_table_prefix;
-
-		$sql = "SELECT ".$db_table_prefix."users.group_id,
-			   ".$db_table_prefix."groups.*
-			   FROM ".$db_table_prefix."users
-			   INNER JOIN ".$db_table_prefix."groups ON ".$db_table_prefix."users.group_id = ".$db_table_prefix."groups.group_id
-			   WHERE
-			   user_id  = '".$db->sql_escape($this->user_id)."'";
-
-		$result = $db->sql_query($sql);
-
-		$row = $db->sql_fetchrow($result);
-
-		return($row);
-	}
-
-	//Is a user member of a group
-	public function isGroupMember($id)
-	{
-		global $db,$db_table_prefix;
-
-		$sql = "SELECT ".$db_table_prefix."users.group_id,
-				".$db_table_prefix."groups.* FROM ".$db_table_prefix."users
-				INNER JOIN ".$db_table_prefix."groups ON ".$db_table_prefix."users.group_id = ".$db_table_prefix."groups.group_id
-				WHERE user_id  = '".$db->sql_escape($this->user_id)."'
-				AND
-				".$db_table_prefix."users.group_id = '".$db->sql_escape($db->sql_escape($id))."'
-				LIMIT 1
-				";
-
-		if(returns_result($sql))
-			return true;
-		else
-			return false;
-
-	}
+	// public function groupID()
+	// {
+	// 	global $db,$db_table_prefix;
+    //
+	// 	$sql = "SELECT ".$db_table_prefix."users.group_id,
+	// 		   ".$db_table_prefix."groups.*
+	// 		   FROM ".$db_table_prefix."users
+	// 		   INNER JOIN ".$db_table_prefix."groups ON ".$db_table_prefix."users.group_id = ".$db_table_prefix."groups.group_id
+	// 		   WHERE
+	// 		   user_id  = '".$db->sql_escape($this->user_id)."'";
+    //
+	// 	$result = $db->sql_query($sql);
+    //
+	// 	$row = $db->sql_fetchrow($result);
+    //
+	// 	return($row);
+	// }
+    //
+	// //Is a user member of a group
+	// public function isGroupMember($id)
+	// {
+	// 	global $db,$db_table_prefix;
+    //
+	// 	$sql = "SELECT ".$db_table_prefix."users.group_id,
+	// 			".$db_table_prefix."groups.* FROM ".$db_table_prefix."users
+	// 			INNER JOIN ".$db_table_prefix."groups ON ".$db_table_prefix."users.group_id = ".$db_table_prefix."groups.group_id
+	// 			WHERE user_id  = '".$db->sql_escape($this->user_id)."'
+	// 			AND
+	// 			".$db_table_prefix."users.group_id = '".$db->sql_escape($db->sql_escape($id))."'
+	// 			LIMIT 1
+	// 			";
+    //
+	// 	if(returns_result($sql))
+	// 		return true;
+	// 	else
+	// 		return false;
+    //
+	// }
 
 	//Logout
 	function userLogOut()

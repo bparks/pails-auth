@@ -11,6 +11,7 @@
     ],
 	"require": {
 		"pails/pails": "^1.0",
+        "pails/actionmailer": "^1.1",
 		"php-activerecord/php-activerecord": "dev-develop"
 	}
 }

@@ -15,7 +15,7 @@ class SessionController extends Pails\Controller
 
     public function unauthorized()
     {
-        //
+        return $this->view();
     }
 
 	public function login()
@@ -99,13 +99,13 @@ class SessionController extends Pails\Controller
 
 			$this->model = $errors;
 		}
+        return $this->view();
 	}
 
 	public function logout()
 	{
 		if($this->is_logged_in())
 			$this->current_user()->userLogOut();
-		header("Location: http://".$_SERVER['HTTP_HOST']);
-		exit();
+		return $this->redirect("http://".$_SERVER['HTTP_HOST']);
 	}
 }
