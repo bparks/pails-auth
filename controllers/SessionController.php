@@ -4,7 +4,7 @@ class SessionController extends Pails\Controller
 	use PailsAuthentication;
 
 	public $before_actions = array(
-		'require_login' => array('except' => array('login', 'logout')),
+		'require_login' => array('except' => array('login', 'logout', 'extend')),
 		'require_anonymous' => array('except' => array('index', 'logout', 'unauthorized'))
 	);
 
@@ -75,6 +75,7 @@ class SessionController extends Pails\Controller
 							$loggedInUser->hash_pw = $userdetails->password;
 							$loggedInUser->remember_me = $remember_choice;
 							$loggedInUser->remember_me_sessid = generateHash(uniqid(rand(), true));
+							//$loggedInUser->provider_name = 'local';
 
 							//Update last sign in
 							$loggedInUser->updatelast_sign_in();
@@ -91,7 +92,10 @@ class SessionController extends Pails\Controller
 							}
 
 							//Redirect to user account page
-							header("Location: /");
+							if (isset($_SESSION['return_url']))
+								header('Location: ' . $_SESSION['return_url'] . '?token=' . $loggedInUser->remember_me_sessid);
+							else
+								header("Location: /");
 						}
 					}
 				}
@@ -99,13 +103,34 @@ class SessionController extends Pails\Controller
 
 			$this->model = $errors;
 		}
+		
+		$providers = PailsAuth::getProviders();
+		if (count($providers) == 1 && !isset($providers['local']))
+		{
+			$values = array_values($providers);
+			$values[0]->redirectToLoginPage();
+		}
+
+		if (isset($_REQUEST['return_url']))
+			$_SESSION['return_url'] = $_REQUEST['return_url'];
+
         return $this->view();
 	}
 
 	public function logout()
 	{
-		if($this->is_logged_in())
-			$this->current_user()->userLogOut();
+		if($this->is_logged_in()) {
+			destroySession(AUTH_COOKIE_NAME);
+		}
 		return $this->redirect("http://".$_SERVER['HTTP_HOST']);
+	}
+
+	public function extend()
+	{
+		$token = $_REQUEST['token'];
+		\Pails\Application::log($token);
+		setcookie(AUTH_COOKIE_NAME, $token, time()+604800, '/');
+
+		return $this->redirect('/');
 	}
 }

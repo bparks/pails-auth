@@ -31,6 +31,8 @@ class User extends ActiveRecord\Model
 	public $email_taken = false;
 	public $username_taken = false;
 	public $activation_token = 0;
+	public $provider_name = 'local';
+	public $provider = null;
 
 	public $hash_pw = NULL;
 	public $remember_me = NULL;

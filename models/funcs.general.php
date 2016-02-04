@@ -109,19 +109,23 @@
 // <http://rememberme4uc.sourceforge.net/>
 function destroySession($name)
 {
-	if($_SESSION[AUTH_COOKIE_NAME]->remember_me == 0) {
-		if(isset($_SESSION[$name])) {
-			$_SESSION[$name] = NULL;
-			unset($_SESSION[$name]);
-			$_SESSION[AUTH_COOKIE_NAME] = NULL;
-		}
-	} else if($_SESSION[AUTH_COOKIE_NAME]->remember_me == 1) {
-		if(isset($_COOKIE[$name])) {
-			$session = Session::find($_SESSION[AUTH_COOKIE_NAME]->remember_me_sessid);
-			$session->delete();
-			setcookie($name, "", time() - 604800);
-			$_SESSION[AUTH_COOKIE_NAME] = NULL;
-		}
+	$token = isset($_COOKIE[$name]) ? $_COOKIE[$name] : $_SESSION[$name]->remember_me_sessid;
+
+	//Clear pails-auth session
+	if (isset($_SESSION[$name]->remember_me) && $_SESSION[$name]->provider == 'local' && $_SESSION[$name]->remember_me == 1) {
+		$session = Session::find($token);
+		$session->delete();
+	}
+
+	//Clear PHP session
+	if(isset($_SESSION[$name])) {
+		$_SESSION[$name] = NULL;
+		unset($_SESSION[$name]);
+	}
+
+	//Clear the cookie
+	if (isset($_COOKIE[$name])) {
+		setcookie($name, "", time() - 604800, '/');
 	}
 }
 

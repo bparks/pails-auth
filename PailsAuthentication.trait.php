@@ -55,19 +55,7 @@ trait PailsAuthentication
 		if (!isset($_SESSION[AUTH_COOKIE_NAME]) || $_SESSION[AUTH_COOKIE_NAME] == NULL)
 			return false;
 
-		$user = User::find($_SESSION[AUTH_COOKIE_NAME]->user_id, array(
-			'conditions' => array('password=? and active=1', $_SESSION[AUTH_COOKIE_NAME]->hash_pw)
-		));
-
-		if ($user)
-			return true;
-		else
-		{
-			//No result returned. kill the user session. user banned or deleted
-			destroySession(AUTH_COOKIE_NAME);
-
-			return false;
-		}
+		return true;
 	}
 
 	protected function current_user()
@@ -87,14 +75,22 @@ trait PailsAuthentication
 		$remember_me_length = 604800;
 		if(isset($_SESSION[AUTH_COOKIE_NAME]) && is_object($_SESSION[AUTH_COOKIE_NAME])) {
 			$loggedInUser = $_SESSION[AUTH_COOKIE_NAME];
+			$loggedInUser->provider = PailsAuth::getProvider($loggedInUser->provider_name);
 		} elseif(isset($_COOKIE[AUTH_COOKIE_NAME])) {
 			try
 			{
-				$session = Session::find($_COOKIE[AUTH_COOKIE_NAME]);
-				$loggedInUser = unserialize($session->session_data);
+				foreach (PailsAuth::getProviders() as $key => $provider) {
+					$loggedInUser = $provider->getSession($_COOKIE[AUTH_COOKIE_NAME]);
+					if ($loggedInUser != null) {
+						$loggedInUser->provider_name = $key;
+						$loggedInUser->provider = $provider;
+						break;
+					}
+				}
 			}
 			catch (Exception $e)
 			{
+				\Pails\Application::log($e->getMessage());
 				//Really? Why kill the session?
 				$loggedInUser = NULL;
 				setcookie(AUTH_COOKIE_NAME, "", -$remember_me_length);
@@ -108,6 +104,14 @@ trait PailsAuthentication
 			}
 			$loggedInUser = NULL;
 		}
-		$_SESSION[AUTH_COOKIE_NAME] = $loggedInUser;
+
+		if ($loggedInUser != null) {
+			if (!is_subclass_of($loggedInUser->provider, '\\Pails\\Authentication\\IAuthenticationProvider') || !$loggedInUser->provider->validate($loggedInUser->user_id, $loggedInUser->hash_pw)) {
+				$loggedInUser = NULL;
+				setcookie(AUTH_COOKIE_NAME, "", -$remember_me_length);
+			}
+
+			$_SESSION[AUTH_COOKIE_NAME] = $loggedInUser;
+		}
 	}
 }
