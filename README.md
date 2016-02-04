@@ -1,25 +1,26 @@
 pails-auth
 ==========
 
-An authentication (and eventually authorization) plugin for pails loosely based
-on UserPie ([userpie.com][userpie]).
+An authentication and authorization plugin for pails loosely based
+on UserPie ([userpie.com][userpie]). At this point it's a near-complete rewrite.
 
 Dependencies
 ------------
 
-* pails-activerecord
-  ```sh
-  pails install activerecord
-  ```
+* pails
+* pails/activerecord
+* pails/actionmailer
+
+We recommend using composer to get the dependencies. Furthermore, we
+recommend not installing the dependencies for pails-auth directly, but listing
+pails-auth as a dependency in your pails application's composer.json file.
 
 Installation
 ------------
 
 In the root of a pails app, run
 
-    pails install auth
-
-If you haven't already installed the `activerecord` plugin, run the command above
+    composer require pails/auth
 
 Configuration
 -------------
@@ -47,8 +48,7 @@ Two utility methods, `is_logged_in` and `current_user`, are also provided.
 Support
 -------
 
-pails-auth is a core plugin supported by Synapse Software. Contact us at
-support@synapsesoftware.com.
+pails-auth is a core plugin maintained and supported by Brian Parks.
 
 [userpie]: http://userpie.com
 [trait]: http://php.net/manual/en/language.oop5.traits.php
