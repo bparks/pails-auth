@@ -96,11 +96,15 @@ trait PailsAuthentication
 				setcookie(AUTH_COOKIE_NAME, "", -$remember_me_length);
 			}
 		} else {
-			$sessions = Session::find('all', array(
-				'conditions' => array(time()." >= (session_start+".$remember_me_length.")")
-			));
-			foreach ($sessions as $session) {
-				$session->delete();
+			//IF LOCAL IS NOT A REGISTERED PROVIDER
+			$providers = PailsAuth::getProviders();
+			if (isset($providers['local'])) {
+				$sessions = Session::find('all', array(
+					'conditions' => array(time()." >= (session_start+".$remember_me_length.")")
+				));
+				foreach ($sessions as $session) {
+					$session->delete();
+				}
 			}
 			$loggedInUser = NULL;
 		}

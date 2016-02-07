@@ -23,6 +23,8 @@ class RemoteAuthenticationProvider implements \Pails\Authentication\IAuthenticat
 		$ch = curl_init();
 
 		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC) ; 
+		curl_setopt($ch, CURLOPT_USERPWD, $basic_auth); 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
 		$data = curl_exec($ch);
@@ -33,6 +35,6 @@ class RemoteAuthenticationProvider implements \Pails\Authentication\IAuthenticat
 
 	function redirectToLoginPage()
 	{
-		header('Location: ' . $this->root_url . '/session/login?return_url=http'.'://'.$_SERVER['HTTP_HOST'].'/session/extend');
+		header('Location: ' . $this->root_url . '/session/login?return_url=http'.'://'.$_SERVER['HTTP_HOST'].'/session/login');
 	}
 }

@@ -4,8 +4,8 @@ class SessionController extends Pails\Controller
 	use PailsAuthentication;
 
 	public $before_actions = array(
-		'require_login' => array('except' => array('login', 'logout', 'extend')),
-		'require_anonymous' => array('except' => array('index', 'logout', 'unauthorized'))
+		'require_login' => array('except' => array('login', 'logout', 'extend', 'get')),
+		'require_anonymous' => array('except' => array('index', 'logout', 'unauthorized', 'get'))
 	);
 
 	public function index()
@@ -20,6 +20,14 @@ class SessionController extends Pails\Controller
 
 	public function login()
 	{
+		if (isset($_REQUEST['token'])) {
+			$token = $_REQUEST['token'];
+			\Pails\Application::log($token);
+			setcookie(AUTH_COOKIE_NAME, $token, time()+604800, '/');
+
+			return $this->redirect('/');
+		}
+
 		if(!empty($_POST))
 		{
 			$errors = array();
@@ -103,7 +111,7 @@ class SessionController extends Pails\Controller
 
 			$this->model = $errors;
 		}
-		
+
 		$providers = PailsAuth::getProviders();
 		if (count($providers) == 1 && !isset($providers['local']))
 		{
@@ -117,20 +125,24 @@ class SessionController extends Pails\Controller
         return $this->view();
 	}
 
-	public function logout()
+	public function get()
 	{
-		if($this->is_logged_in()) {
-			destroySession(AUTH_COOKIE_NAME);
+		$providers = PailsAuth::getProviders();
+		if (!isset($providers['local'])) {
+			return $this->notFound();
 		}
-		return $this->redirect("http://".$_SERVER['HTTP_HOST']);
+		if (!isset($_SERVER['HTTP_AUTHORIZATION']) || strpos(strtolower($_SERVER['HTTP_AUTHORIZATION']), 'basic') !== 0) {
+			return $this->notFound();
+		}
+		$session = Session::find(substr($_SERVER['HTTP_AUTHORIZATION'], 6));
+		return $this->json(unserialize($session->session_data));
 	}
 
-	public function extend()
+	public function logout()
 	{
-		$token = $_REQUEST['token'];
-		\Pails\Application::log($token);
-		setcookie(AUTH_COOKIE_NAME, $token, time()+604800, '/');
-
-		return $this->redirect('/');
+		if($this->is_logged_in()) { //DELETE THIS
+			destroySession(AUTH_COOKIE_NAME);
+		} //DELETE THIS
+		return $this->redirect("http://".$_SERVER['HTTP_HOST']);
 	}
 }
