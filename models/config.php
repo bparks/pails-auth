@@ -1,5 +1,7 @@
 <?php
 require_once(__DIR__."/Session.php");
+require_once(__DIR__."/IUserIdentity.php");
+require_once(__DIR__."/WrappedUser.php");
 require_once(__DIR__."/User.php");
 require_once(__DIR__."/Group.php");
 require_once(__DIR__."/Permission.php");

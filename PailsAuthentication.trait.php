@@ -25,7 +25,7 @@ trait PailsAuthentication
 	{
 		if (is_array($permissions))
 		{
-			\Pails\Application::log('This page requires '.implode(', ', $permissions).'.');
+			//\Pails\Application::log('This page requires '.implode(', ', $permissions).'.');
 			foreach ($permissions as $perm)
 			{
 				if (!$this->current_user()->has_permission($perm))
@@ -60,8 +60,12 @@ trait PailsAuthentication
 
 	protected function current_user()
 	{
-		if ($this->is_logged_in())
-			return User::find($_SESSION[AUTH_COOKIE_NAME]->user_id);
+		if ($this->is_logged_in()) {
+			$providers = PailsAuth::getProviders();
+			if (isset($providers['local']))
+				return User::find($_SESSION[AUTH_COOKIE_NAME]->user_id);
+			return new \Pails\Authentication\WrappedUser($_SESSION[AUTH_COOKIE_NAME]);
+		}
 		return null;
 	}
 

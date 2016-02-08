@@ -6,7 +6,7 @@
 */
 
 
-class User extends ActiveRecord\Model
+class User extends ActiveRecord\Model implements \Pails\Authentication\IUserIdentity
 {
 	static $table_name = "users";
 	static $primary_key = "user_id";
