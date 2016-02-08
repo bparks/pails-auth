@@ -9,7 +9,7 @@ class RemoteAuthenticationProvider implements IAuthenticationProvider
 	function __construct($options)
 	{
 		if (!isset($options['server']))
-			throw new Exception("Option 'server' must be specified for a RemoteAuthenticationProvider");
+			throw new \Exception("Option 'server' must be specified for a RemoteAuthenticationProvider");
 		$this->root_url = $options['server'];
 	}
 
