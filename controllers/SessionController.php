@@ -20,6 +20,11 @@ class SessionController extends Pails\Controller
 
 	public function login()
 	{
+		$providers = PailsAuth::getProviders();
+
+		if ($this->is_logged_in() && isset($_REQUEST['return_url']) && isset($providers['local']))
+			header('Location: ' . $_REQUEST['return_url'] . '?token=' . $this->current_user()->remember_me_sessid);
+
 		if (isset($_REQUEST['token'])) {
 			$token = $_REQUEST['token'];
 			\Pails\Application::log($token);
@@ -112,7 +117,6 @@ class SessionController extends Pails\Controller
 			$this->model = $errors;
 		}
 
-		$providers = PailsAuth::getProviders();
 		if (count($providers) == 1 && !isset($providers['local']))
 		{
 			$values = array_values($providers);
@@ -135,7 +139,7 @@ class SessionController extends Pails\Controller
 			return $this->notFound();
 		}
 		$session = Session::find(substr($_SERVER['HTTP_AUTHORIZATION'], 6));
-		return $this->json(unserialize($session->session_data));
+		return $this->content(unserialize($session->session_data)->to_json());
 	}
 
 	public function logout()

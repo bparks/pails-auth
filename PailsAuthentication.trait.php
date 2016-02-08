@@ -114,7 +114,7 @@ trait PailsAuthentication
 		}
 
 		if ($loggedInUser != null) {
-			if (!is_subclass_of($loggedInUser->provider, '\\Pails\\Authentication\\IAuthenticationProvider') || !$loggedInUser->provider->validate($loggedInUser->user_id, $loggedInUser->hash_pw)) {
+			if (!is_subclass_of($loggedInUser->provider, '\\Pails\\Authentication\\IAuthenticationProvider') || !$loggedInUser->provider->validate($loggedInUser->user_id, $loggedInUser->password)) {
 				$loggedInUser = NULL;
 				setcookie(AUTH_COOKIE_NAME, "", -$remember_me_length);
 			}
