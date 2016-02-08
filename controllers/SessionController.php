@@ -5,7 +5,7 @@ class SessionController extends Pails\Controller
 
 	public $before_actions = array(
 		'require_login' => array('except' => array('login', 'logout', 'extend', 'get')),
-		'require_anonymous' => array('except' => array('index', 'logout', 'unauthorized', 'get'))
+		'require_anonymous' => array('except' => array('index', 'login', 'logout', 'unauthorized', 'get'))
 	);
 
 	public function index()
