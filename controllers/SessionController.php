@@ -22,8 +22,8 @@ class SessionController extends Pails\Controller
 	{
 		$providers = PailsAuth::getProviders();
 
-		if ($this->is_logged_in() && isset($_REQUEST['return_url']) && isset($providers['local']))
-			header('Location: ' . $_REQUEST['return_url'] . '?token=' . $this->current_user()->remember_me_sessid);
+		if (isset($providers['local']) && $this->is_logged_in() && isset($_REQUEST['return_url']))
+			header('Location: ' . $_REQUEST['return_url'] . '?token=' . $_SESSION[AUTH_COOKIE_NAME]->remember_me_sessid);
 
 		if (isset($_REQUEST['token'])) {
 			$token = $_REQUEST['token'];
@@ -38,7 +38,7 @@ class SessionController extends Pails\Controller
 			$errors = array();
 			$username = trim($_POST["username"]);
 			$password = trim($_POST["password"]);
-			$remember_choice = isset($_POST['remember_me']) ? trim($_POST["remember_me"]) : 0;
+			$remember_choice = isset($_POST['remember_me']) || isset($_SESSION['return_url']) || isset($_REQUEST['return_url']) ? 1 : 0;
 
 			//Perform some validation
 			//Feel free to edit / change as required
