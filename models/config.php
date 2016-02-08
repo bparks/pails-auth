@@ -49,17 +49,18 @@ class PailsAuth
 
 		if (isset($options['providers'])) {
 			self::$providers = [];
-			foreach ($options['providers'] as $item) {
-				if ($item == 'local')
-					self::$providers['local'] = new LocalAuthenticationProvider;
-
-				$parts = explode(';', $item, 3);
-
-				if ($parts[0] == 'remote')
-					self::$providers[$parts[1]] = new RemoteAuthenticationProvider($parts[2]);
+			foreach ($options['providers'] as $key => $value) {
+				$classname = $value[0];
+				if (substr($classname, 0, 1) !== '\\')
+					$classname = "\\Pails\\Authentication\\".$classname;
+				
+				if (count($value) > 1)
+					self::$providers[$key] = new $classname($value[1]);
+				else
+					self::$providers[$key] = new $classname();
 			}
 		} else {
-			self::$providers = ['local' => new LocalAuthenticationProvider];
+			self::$providers = ['local' => new \Pails\Authentication\LocalAuthenticationProvider];
 		}
 	}
 

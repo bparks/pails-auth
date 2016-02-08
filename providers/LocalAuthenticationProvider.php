@@ -1,6 +1,8 @@
 <?php
 
-class LocalAuthenticationProvider implements \Pails\Authentication\IAuthenticationProvider
+namespace Pails\Authentication;
+
+class LocalAuthenticationProvider implements IAuthenticationProvider
 {
 	function validate($user_id, $hash)
 	{

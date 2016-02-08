@@ -1,12 +1,16 @@
 <?php
 
-class RemoteAuthenticationProvider implements \Pails\Authentication\IAuthenticationProvider
+namespace Pails\Authentication;
+
+class RemoteAuthenticationProvider implements IAuthenticationProvider
 {
 	private $root_url;
 
-	function __construct($base_url)
+	function __construct($options)
 	{
-		$this->root_url = $base_url;
+		if (!isset($options['server']))
+			throw new Exception("Option 'server' must be specified for a RemoteAuthenticationProvider");
+		$this->root_url = $options['server'];
 	}
 
 	function validate($user, $hash)
