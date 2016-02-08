@@ -14,7 +14,7 @@ class Permission extends ActiveRecord\Model
 	static function init_permissions($users, $groups)
 	{
 		if (self::$initialized)
-			throw new RuntimeError('Permissions stack has already been initialized');
+			throw new Exception('Permissions stack has already been initialized');
 
 		self::$permissions['users'] = $users;
 		self::$permissions['groups'] = $groups;
