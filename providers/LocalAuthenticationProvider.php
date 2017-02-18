@@ -15,9 +15,15 @@ class LocalAuthenticationProvider implements IAuthenticationProvider
 
 	function getSession($session_key)
 	{
-		$session = \Session::find($session_key);
+		$session = \Session::find_by_session_id($session_key);
+        if ($session == null) return null;
 		return unserialize($session->session_data);
 	}
+
+    function getLoginUrl()
+    {
+        return '/session/login';
+    }
 
 	function redirectToLoginPage()
 	{

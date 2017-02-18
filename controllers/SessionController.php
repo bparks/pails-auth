@@ -122,7 +122,7 @@ class SessionController extends Pails\Controller
 				}
 			}
 
-			$this->model = $errors;
+			$this->flashNow('error', '<ul>' . implode('', array_map(function ($item) { return '<li>' . $item . '</li>'; }, $errors) . '</ul>'));
 		}
 
 		if (count($providers) == 1 && !isset($providers['local']))
@@ -134,6 +134,7 @@ class SessionController extends Pails\Controller
 		if (isset($_REQUEST['return_url']))
 			$_SESSION['return_url'] = $_REQUEST['return_url'];
 
+        $this->model = $providers;
         return $this->view();
 	}
 

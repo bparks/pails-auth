@@ -37,8 +37,13 @@ class RemoteAuthenticationProvider implements IAuthenticationProvider
 		return json_decode($data);
 	}
 
+    function getLoginUrl()
+    {
+        return $this->root_url . '/session/login?return_url=http'.'://'.$_SERVER['HTTP_HOST'].'/session/login';
+    }
+
 	function redirectToLoginPage()
 	{
-		header('Location: ' . $this->root_url . '/session/login?return_url=http'.'://'.$_SERVER['HTTP_HOST'].'/session/login');
+		header('Location: ' . $this->getLoginUrl());
 	}
 }
