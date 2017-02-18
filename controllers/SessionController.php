@@ -27,10 +27,15 @@ class SessionController extends Pails\Controller
 
 		if (isset($_REQUEST['token'])) {
 			$token = $_REQUEST['token'];
-			\Pails\Application::log($token);
 			setcookie(AUTH_COOKIE_NAME, $token, time()+604800, '/');
 
-			return $this->redirect('/');
+            if (isset($_SESSION['return_url'])) {
+                $return_url = $_SESSION['return_url'];
+                unset($_SESSION['return_url']);
+                return $this->redirect($return_url);
+            } else {
+                return $this->redirect("/");
+            }
 		}
 
 		if(!empty($_POST))
@@ -105,10 +110,13 @@ class SessionController extends Pails\Controller
 							}
 
 							//Redirect to user account page
-							if (isset($_SESSION['return_url']))
-								header('Location: ' . $_SESSION['return_url'] . '?token=' . $loggedInUser->remember_me_sessid);
-							else
+							if (isset($_SESSION['return_url'])) {
+                                $return_url = $_SESSION['return_url'];
+                                unset($_SESSION['return_url']);
+								header('Location: ' . $return_url . '?token=' . $loggedInUser->remember_me_sessid);
+							} else {
 								header("Location: /");
+                            }
 						}
 					}
 				}

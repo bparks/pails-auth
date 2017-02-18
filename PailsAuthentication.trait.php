@@ -7,6 +7,7 @@ trait PailsAuthentication
 	{
 		if (!$this->is_logged_in())
 		{
+            $_SESSION['return_url'] = $_SERVER['REQUEST_URI'];
 			header('Location: '.$redirect_url);
 			exit();
 		}
