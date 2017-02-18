@@ -67,7 +67,8 @@ class User extends ActiveRecord\Model implements \Pails\Authentication\IUserIden
 
 	public function has_permission($permission)
 	{
-		return $this->group->has_permission($permission) || Permission::user_has(strtolower($this->username), $permission);
+        $fq_username = ($this->provider_name != 'local' ? $this->provider_name . ':' : '') . strtolower($this->username);
+		return $this->group->has_permission($permission) || Permission::user_has($fq_username, $permission);
 	}
 
 	public function userPieAddUser()

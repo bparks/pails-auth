@@ -13,6 +13,7 @@ class WrappedUser implements IUserIdentity
 
 	function has_permission($permission)
 	{
-		return isset($this->username) && \Permission::user_has(strtolower($this->username), $permission);
+        $fq_username = ($this->provider_name != 'local' ? $this->provider_name . ':' : '') . strtolower($this->username);
+		return isset($this->username) && \Permission::user_has(strtolower($fq_username), $permission);
 	}
 }

@@ -39,7 +39,7 @@ trait PailsAuthentication
 		}
 		else
 		{
-			\Pails\Application::log('This page requires '.$permissions.'.');
+			//\Pails\Application::log('This page requires '.$permissions.'.');
 			if (!$this->current_user()->has_permission($permissions))
             {
                 header('Location: /session/unauthorized');
