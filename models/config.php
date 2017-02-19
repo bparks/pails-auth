@@ -12,6 +12,7 @@ require_once(dirname(__DIR__)."/mailers/AuthMailer.php");
 require_once(dirname(__DIR__)."/providers/IAuthenticationProvider.php");
 require_once(dirname(__DIR__)."/providers/LocalAuthenticationProvider.php");
 require_once(dirname(__DIR__)."/providers/RemoteAuthenticationProvider.php");
+require_once(dirname(__DIR__)."/providers/GoogleAuthenticationProvider.php");
 
 /*
 //This code really needs to go somewhere else
@@ -53,7 +54,7 @@ class PailsAuth
 				$classname = $value[0];
 				if (substr($classname, 0, 1) !== '\\')
 					$classname = "\\Pails\\Authentication\\".$classname;
-				
+
 				if (count($value) > 1)
 					self::$providers[$key] = new $classname($value[1]);
 				else

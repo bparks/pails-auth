@@ -153,9 +153,13 @@ class SessionController extends Pails\Controller
 
 	public function logout()
 	{
-		if($this->is_logged_in()) { //DELETE THIS
+		if($this->is_logged_in()) {
+            $provider_name = $this->current_user()->provider_name;
 			destroySession(AUTH_COOKIE_NAME);
-		} //DELETE THIS
+            if ($provider_name == 'google') {
+                return $this->view();
+            }
+		}
 		return $this->redirect("http://".$_SERVER['HTTP_HOST']);
 	}
 }

@@ -63,7 +63,7 @@ trait PailsAuthentication
 	{
 		if ($this->is_logged_in()) {
 			$providers = PailsAuth::getProviders();
-			if (isset($providers['local']))
+			if (isset($providers['local']) && $_SESSION[AUTH_COOKIE_NAME]->provider_name == 'local')
 				return User::find($_SESSION[AUTH_COOKIE_NAME]->user_id);
 			return new \Pails\Authentication\WrappedUser($_SESSION[AUTH_COOKIE_NAME]);
 		}

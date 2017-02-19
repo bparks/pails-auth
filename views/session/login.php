@@ -34,10 +34,22 @@
         </form>
 <?php endif; ?>
 <?php foreach ($this->model as $key => $value): ?>
-    <?php if ($key == 'local' || get_class($value) == 'Pails\Authentication\LocalAuthenticationProvider') continue; ?>
+    <?php if ($key == 'local' || get_class($value) == 'Pails\Authentication\LocalAuthenticationProvider'): continue; ?>
+    <?php elseif (get_class($value) == 'Pails\Authentication\GoogleAuthenticationProvider'): ?>
+        <script>
+        if (!window.onGoogleSignIn) {
+            function onGoogleSignIn(googleUser) {
+                var id_token = googleUser.getAuthResponse().id_token;
+                document.location.href = '/session/login?token=' + id_token;
+            }
+        }
+        </script>
+        <div class="g-signin2" data-onsuccess="onGoogleSignIn"></div>
+    <?php else: ?>
         <div class="login-option">
             <a href="<?php echo $value->getLoginUrl(); ?>">Log in with <?php echo $key; ?></a>
         </div>
+    <?php endif; ?>
 <?php endforeach; ?>
     </div>
 </div>
