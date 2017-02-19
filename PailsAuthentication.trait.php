@@ -65,6 +65,36 @@ trait PailsAuthentication
 			$providers = PailsAuth::getProviders();
 			if (isset($providers['local']) && $_SESSION[AUTH_COOKIE_NAME]->provider_name == 'local')
 				return User::find($_SESSION[AUTH_COOKIE_NAME]->user_id);
+            if (PailsAuth::shouldMergeLocalUsers() && $_SESSION[AUTH_COOKIE_NAME]->email != '') {
+                $user = User::find_by_email($_SESSION[AUTH_COOKIE_NAME]->email);
+                if ($user != null) {
+                    //\Pails\Application::log('Found local user ID ' . $user->user_id);
+                    $user->provider_name = $_SESSION[AUTH_COOKIE_NAME]->provider_name;
+                    $user->provider = $_SESSION[AUTH_COOKIE_NAME]->provider;
+                    return $user;
+                }
+
+                if (PailsAuth::shouldCreateLocalUsers()) {
+                    $user = User::create([
+                        //'user_id' => CREATED AUTOMATICALLY
+                        'username' => $_SESSION[AUTH_COOKIE_NAME]->email,
+                        'username_clean' => strtolower(trim($_SESSION[AUTH_COOKIE_NAME]->email)),
+                        'password' => $_SESSION[AUTH_COOKIE_NAME]->provider_name . ':' . $_SESSION[AUTH_COOKIE_NAME]->user_id,
+                        'email' => $_SESSION[AUTH_COOKIE_NAME]->email,
+                        'activationtoken' => md5(time()),
+                        'last_activation_request' => time(),
+                        'LostpasswordRequest' => 0,
+                        'active' => 1,
+                        'group_id' => 1,
+                        'sign_up_date' => time(),
+                        'last_sign_in' => time(),
+                    ]);
+                    //\Pails\Application::log('Created local user ID ' . $user->user_id);
+                    $user->provider_name = $_SESSION[AUTH_COOKIE_NAME]->provider_name;
+                    $user->provider = $_SESSION[AUTH_COOKIE_NAME]->provider;
+                    return $user;
+                }
+            }
 			return new \Pails\Authentication\WrappedUser($_SESSION[AUTH_COOKIE_NAME]);
 		}
 		return null;

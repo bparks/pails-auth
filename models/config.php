@@ -27,6 +27,8 @@ define('AUTH_COOKIE_NAME', 'pails_auth_token');
 class PailsAuth
 {
 	static private $providers;
+    static private $merge_local_users = true;
+    static private $create_local_users = false;
 
 	static function initialize($options = [])
 	{
@@ -63,6 +65,11 @@ class PailsAuth
 		} else {
 			self::$providers = ['local' => new \Pails\Authentication\LocalAuthenticationProvider];
 		}
+
+        if (isset($options['merge_local_users']))
+            self::$merge_local_users = $options['merge_local_users'];
+        if (isset($options['create_local_users']))
+            self::$create_local_users = $options['create_local_users'];
 	}
 
 	static function getProviders()
@@ -76,4 +83,14 @@ class PailsAuth
 			return null;
 		return self::$providers[$key];
 	}
+
+    static function shouldMergeLocalUsers()
+    {
+        return self::$merge_local_users;
+    }
+
+    static function shouldCreateLocalUsers()
+    {
+        return self::$create_local_users;
+    }
 }
