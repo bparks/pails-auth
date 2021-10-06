@@ -99,23 +99,23 @@ class User extends ActiveRecord\Model implements \Pails\Authentication\IUserIden
             try {
                 $mail = AuthMailer::new_registration($this, $activation_message);
                 $mail->deliver();
+			} catch (TypeError $e) {
+                \Pails\Application::log($e->getMessage());
+                $this->mail_failure = true;
             } catch (Exception $e) {
                 \Pails\Application::log($e->getMessage());
                 $this->mail_failure = true;
             }
 
-            if(!$this->mail_failure)
-            {
-                $this->last_activation_request = time();
-                $this->lostpasswordrequest = 0;
-                $this->active = $this->user_active;
-                $this->group_id = 1;
-                $this->sign_up_date = time();
-                $this->last_sign_in = 0;
-                $this->save();
+			$this->last_activation_request = time();
+			$this->lostpasswordrequest = 0;
+			$this->active = $this->user_active;
+			$this->group_id = 1;
+			$this->sign_up_date = time();
+			$this->last_sign_in = 0;
+			$this->save();
 
-                return true;
-            }
+            return !$this->mail_failure;
 		}
 	}
 
