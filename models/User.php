@@ -100,10 +100,10 @@ class User extends ActiveRecord\Model implements \Pails\Authentication\IUserIden
                 $mail = AuthMailer::new_registration($this, $activation_message);
                 $mail->deliver();
 			} catch (TypeError $e) {
-                \Pails\Application::log($e->getMessage());
+                \Pails\Application::log("$e");
                 $this->mail_failure = true;
             } catch (Exception $e) {
-                \Pails\Application::log($e->getMessage());
+                \Pails\Application::log("$e");
                 $this->mail_failure = true;
             }
 
