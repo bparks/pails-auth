@@ -78,7 +78,7 @@ if(!empty($_POST))
         	endif;
         endif;
         ?>
-        <form name="changePass" action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post">
+        <form name="changePass" action="/account/password" method="post">
         <p>
             <label>Password:</label>
             <input type="password" name="password" />

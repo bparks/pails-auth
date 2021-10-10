@@ -109,7 +109,7 @@ if(!empty($_POST))
 			endif;
 	    endif;
 	    ?>
-	    <form name="resendActivation" action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post">
+	    <form name="resendActivation" action="/account/resend" method="post">
 		<p>
 		    <label>username:</label>
 		    <input type="text" name="username" />

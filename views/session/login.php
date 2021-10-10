@@ -11,7 +11,7 @@
         endif;
     	?>
 <?php if (isset($this->model['local'])): ?>
-        <form name="newUser" action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post">
+        <form name="newUser" action="/session/login" method="post">
         <p>
             <label>Username:</label>
             <input type="text"  name="username" />

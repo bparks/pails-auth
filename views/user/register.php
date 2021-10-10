@@ -77,7 +77,7 @@ if(!empty($_POST))
         </div>
 
         <div id="regbox">
-            <form name="newUser" action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post">
+            <form name="newUser" action="/user/register" method="post">
             <p>
                 <label>Username:</label>
                 <input type="text" name="username" />
