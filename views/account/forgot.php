@@ -175,7 +175,7 @@ if(!empty($_POST))
         endif;
         ?>
         <div id="regbox">
-            <form name="newLostPass" action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post">
+            <form name="newLostPass" action="/account/forgot" method="post">
             <p>
                 <label>Username:</label>
                 <input type="text" name="username" />
