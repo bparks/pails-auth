@@ -122,7 +122,7 @@ class SessionController extends Pails\Controller
 				}
 			}
 
-			$this->flashNow('error', '<ul>' . implode('', array_map(function ($item) { return '<li>' . $item . '</li>'; }, $errors) . '</ul>'));
+			$this->flashNow('error', '<ul>' . implode('', array_map(function ($item) { return '<li>' . $item . '</li>'; }, $errors)) . '</ul>');
 		}
 
 		if (count($providers) == 1 && !isset($providers['local']))
