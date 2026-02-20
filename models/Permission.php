@@ -31,6 +31,14 @@ class Permission extends ActiveRecord\Model
 			self::$declared[$key] = true;
 	}
 
+	/** Returns the list of declared permission names (sorted). Use e.g. for dropdowns on grant screens. */
+	static function declared_permissions()
+	{
+		$keys = array_keys(self::$declared);
+		sort($keys);
+		return $keys;
+	}
+
 	private static function is_declared($permission)
 	{
 		$key = strtolower(trim($permission));

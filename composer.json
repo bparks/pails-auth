@@ -1,14 +1,15 @@
 {
-	"name": "pails/auth",
-	"autoload": {
-		"files": ["models/config.php"]
-	},
-	"require": {
-		"pails/pails": "^1.0",
-        "pails/actionmailer": "^1.1",
-		"pails/activerecord": "^1.2"
-	},
-    "suggest": {
-        "google/apiclient": "Adds the ability to authenticate with Google"
-    }
+  "name": "pails/auth",
+  "autoload": {"files": ["models/config.php"]},
+  "require": {
+    "pails/pails": "^1.0",
+    "pails/actionmailer": "^1.1",
+    "pails/activerecord": "^1.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9"
+  },
+  "suggest": {
+    "google/apiclient": "Adds the ability to authenticate with Google"
+  }
 }

@@ -29,6 +29,7 @@ if (!empty($_POST)) {
 }
 $users = User::all();
 $groups = Group::all();
+$declared_permissions = Permission::declared_permissions();
 ?>
 <h2>Grant permission</h2>
 <?php if (count($errors) > 0): ?>
@@ -65,7 +66,15 @@ $groups = Group::all();
 	</p>
 	<p>
 		<label>Permission:</label>
-		<input type="text" name="permission" value="<?php echo isset($_POST['permission']) ? htmlspecialchars($_POST['permission']) : ''; ?>" />
+		<select name="permission">
+			<option value="">-- choose permission --</option>
+			<?php foreach ($declared_permissions as $perm): ?>
+			<option value="<?php echo htmlspecialchars($perm); ?>" <?php echo (isset($_POST['permission']) && $_POST['permission'] === $perm) ? 'selected' : ''; ?>><?php echo htmlspecialchars($perm); ?></option>
+			<?php endforeach; ?>
+		</select>
+		<?php if (count($declared_permissions) === 0): ?>
+		<span style="color:#666;">No permissions declared. Add Permission::declare_permission('...') in an initializer.</span>
+		<?php endif; ?>
 	</p>
 	<input type="submit" class="btn btn-primary" value="Grant" />
 </form>
