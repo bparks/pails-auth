@@ -13,6 +13,40 @@ class Permission extends ActiveRecord\Model
 	);
 	private static $initialized = false;
 
+	/** Permissions that have been declared by the app (documented as available). */
+	private static $declared = array();
+
+	/**
+	 * Declare a permission that your app uses. Call this in an initializer (e.g. config)
+	 * to document available permissions. Undeclared permissions will trigger warnings
+	 * when granted or when used with require_permission / has_permission.
+	 * (Method is named declare_permission because 'declare' is reserved in PHP.)
+	 *
+	 * @param string $name Permission name (e.g. 'manage_users')
+	 */
+	static function declare_permission($name)
+	{
+		$key = strtolower(trim($name));
+		if ($key !== '')
+			self::$declared[$key] = true;
+	}
+
+	private static function is_declared($permission)
+	{
+		$key = strtolower(trim($permission));
+		return $key !== '' && isset(self::$declared[$key]);
+	}
+
+	private static function warn_if_undeclared($permission, $context)
+	{
+		$p = trim($permission);
+		if ($p === '') return;
+		if (self::is_declared($p)) return;
+		$msg = "Undeclared permission '" . $p . "' " . $context . ". "
+			. "Add Permission::declare_permission('" . addslashes($p) . "') to an initializer to document available permissions.";
+		trigger_error($msg, E_USER_WARNING);
+	}
+
 	static function init_permissions($users, $groups)
 	{
 		if (self::$initialized)
@@ -49,6 +83,7 @@ class Permission extends ActiveRecord\Model
 	/** Grant a permission to a user (DB record). */
 	static function grant_to_user($user_id, $permission)
 	{
+		self::warn_if_undeclared($permission, 'granted to user');
 		$p = new self();
 		$p->user_id = (int) $user_id;
 		$p->group_id = null;
@@ -59,6 +94,7 @@ class Permission extends ActiveRecord\Model
 	/** Grant a permission to a group (DB record). */
 	static function grant_to_group($group_id, $permission)
 	{
+		self::warn_if_undeclared($permission, 'granted to group');
 		$p = new self();
 		$p->user_id = null;
 		$p->group_id = (int) $group_id;
@@ -82,6 +118,13 @@ class Permission extends ActiveRecord\Model
 
 		$user_name = strtolower($user_name);
 
+		if (is_array($permission)) {
+			foreach ($permission as $p)
+				self::warn_if_undeclared($p, 'granted');
+		} else {
+			self::warn_if_undeclared($permission, 'granted');
+		}
+
 		if (!isset(self::$permissions[$stack][$user_name]))
 			self::$permissions[$stack][$user_name] = array();
 
@@ -93,6 +136,7 @@ class Permission extends ActiveRecord\Model
 
 	public static function user_has($user_name, $permission)
 	{
+		self::warn_if_undeclared($permission, 'used in permission check (user_has)');
 		$user_name = strtolower($user_name);
         $permission = strtolower(trim($permission));
 
@@ -104,6 +148,7 @@ class Permission extends ActiveRecord\Model
 
 	public static function group_has($group_name, $permission)
 	{
+		self::warn_if_undeclared($permission, 'used in permission check (group_has)');
 		$group_name = strtolower($group_name);
         $permission = strtolower(trim($permission));
 

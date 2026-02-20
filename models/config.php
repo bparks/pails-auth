@@ -40,6 +40,7 @@ class PailsAuth
 			isset($GROUP_PERMISSIONS) ? $GROUP_PERMISSIONS : array()
 		);
 
+		Permission::declare_permission('manage_users');
 		Permission::grant_group('admin', 'manage_users');
 		Permission::load_db_grants();
 
