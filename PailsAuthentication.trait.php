@@ -22,6 +22,26 @@ trait PailsAuthentication
 		}
 	}
 
+	/**
+	 * Returns true if the current user has the given permission(s).
+	 * Pass a string for one permission, or an array to require all listed permissions.
+	 * Returns false if not logged in.
+	 */
+	protected function has_permission($permissions)
+	{
+		$user = $this->current_user();
+		if ($user === null)
+			return false;
+		if (is_array($permissions)) {
+			foreach ($permissions as $perm) {
+				if (!$user->has_permission($perm))
+					return false;
+			}
+			return true;
+		}
+		return $user->has_permission($permissions);
+	}
+
 	protected function require_permission($permissions)
 	{
 		if (is_array($permissions))
