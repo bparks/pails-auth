@@ -1,8 +1,10 @@
 <?php
 class Permission extends ActiveRecord\Model
 {
+	static $table_name = 'permissions';
 	static $belongs_to = array(
-		array('user')
+		array('user'),
+		array('group')
 	);
 
 	private static $permissions = array(
@@ -19,6 +21,49 @@ class Permission extends ActiveRecord\Model
 		self::$permissions['users'] = $users;
 		self::$permissions['groups'] = $groups;
 		self::$initialized = true;
+	}
+
+	/** Load DB permission records into the in-memory stack so checks apply. Call after init_permissions. */
+	static function load_db_grants()
+	{
+		$rows = self::all();
+		foreach ($rows as $p) {
+			$perm = strtolower(trim($p->permission));
+			if ($perm === '') continue;
+			if ($p->user_id !== null) {
+				$user = User::find($p->user_id);
+				if ($user) {
+					$prefix = (isset($user->provider_name) && $user->provider_name != 'local') ? $user->provider_name . ':' : '';
+					$name = $prefix . strtolower($user->username);
+					self::grant('users', $name, $perm);
+				}
+			} elseif ($p->group_id !== null) {
+				$group = Group::find($p->group_id);
+				if ($group) {
+					self::grant('groups', strtolower($group->group_name), $perm);
+				}
+			}
+		}
+	}
+
+	/** Grant a permission to a user (DB record). */
+	static function grant_to_user($user_id, $permission)
+	{
+		$p = new self();
+		$p->user_id = (int) $user_id;
+		$p->group_id = null;
+		$p->permission = trim($permission);
+		$p->save();
+	}
+
+	/** Grant a permission to a group (DB record). */
+	static function grant_to_group($group_id, $permission)
+	{
+		$p = new self();
+		$p->user_id = null;
+		$p->group_id = (int) $group_id;
+		$p->permission = trim($permission);
+		$p->save();
 	}
 
 	static function grant_user($user_name, $permission)

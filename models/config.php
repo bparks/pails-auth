@@ -41,6 +41,7 @@ class PailsAuth
 		);
 
 		Permission::grant_group('admin', 'manage_users');
+		Permission::load_db_grants();
 
 		if (defined('ADMIN_MENU_SLUG'))
 		{
