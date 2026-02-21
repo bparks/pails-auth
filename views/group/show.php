@@ -34,7 +34,7 @@
 
 <h3>Add member</h3>
 <?php
-	$all_users = User::all();
+	$all_users = User::all()->to_array();
 	$member_ids = array_map(function ($u) { return $u->user_id; }, $members->to_array());
 	$non_members = array_filter($all_users, function ($u) use ($member_ids) { return !in_array($u->user_id, $member_ids); });
 ?>

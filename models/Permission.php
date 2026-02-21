@@ -18,8 +18,8 @@ class Permission extends ActiveRecord\Model
 
 	/**
 	 * Declare a permission that your app uses. Call this in an initializer (e.g. config)
-	 * to document available permissions. Undeclared permissions will trigger warnings
-	 * when granted or when used with require_permission / has_permission.
+	 * to document available permissions. Undeclared permissions trigger a warning only
+	 * when checked (user_has / group_has / require_permission); granting does not warn.
 	 * (Method is named declare_permission because 'declare' is reserved in PHP.)
 	 *
 	 * @param string $name Permission name (e.g. 'manage_users')
@@ -148,7 +148,6 @@ class Permission extends ActiveRecord\Model
 	/** Grant a permission to a user (DB record). */
 	static function grant_to_user($user_id, $permission)
 	{
-		self::warn_if_undeclared($permission, 'granted to user');
 		$p = new self();
 		$p->user_id = (int) $user_id;
 		$p->group_id = null;
@@ -159,7 +158,6 @@ class Permission extends ActiveRecord\Model
 	/** Grant a permission to a group (DB record). */
 	static function grant_to_group($group_id, $permission)
 	{
-		self::warn_if_undeclared($permission, 'granted to group');
 		$p = new self();
 		$p->user_id = null;
 		$p->group_id = (int) $group_id;
@@ -182,13 +180,6 @@ class Permission extends ActiveRecord\Model
 		self::$initialized = true;
 
 		$user_name = strtolower($user_name);
-
-		if (is_array($permission)) {
-			foreach ($permission as $p)
-				self::warn_if_undeclared($p, 'granted');
-		} else {
-			self::warn_if_undeclared($permission, 'granted');
-		}
 
 		if (!isset(self::$permissions[$stack][$user_name]))
 			self::$permissions[$stack][$user_name] = array();

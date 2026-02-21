@@ -53,15 +53,17 @@ class PermissionTest extends TestCase
         $this->assertSame([], Permission::declared_permissions());
     }
 
-    public function test_undeclared_permission_triggers_warning(): void
+    public function test_undeclared_permission_triggers_warning_when_checked(): void
     {
+        Permission::grant('users', 'alice', 'undeclared_perm');
+
         $captured = null;
         $prev = set_error_handler(function ($errno, $errstr) use (&$captured) {
             $captured = $errstr;
             return true;
         });
 
-        Permission::grant('users', 'alice', 'undeclared_perm');
+        Permission::user_has('alice', 'undeclared_perm');
 
         set_error_handler($prev);
 
@@ -70,6 +72,20 @@ class PermissionTest extends TestCase
         $this->assertStringContainsString('undeclared_perm', $captured);
         $this->assertStringContainsString('Permission::declare_permission', $captured);
         $this->assertStringContainsString('initializer', $captured);
+    }
+
+    public function test_undeclared_permission_does_not_warn_when_granted(): void
+    {
+        $warned = false;
+        $prev = set_error_handler(function () use (&$warned) {
+            $warned = true;
+            return true;
+        });
+
+        Permission::grant('users', 'bob', 'another_undeclared');
+
+        set_error_handler($prev);
+        $this->assertFalse($warned, 'Granting an undeclared permission should not trigger a warning');
     }
 
     public function test_declared_permission_does_not_trigger_warning_when_granted(): void
