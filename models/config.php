@@ -42,7 +42,7 @@ class PailsAuth
 
 		Permission::declare_permission('manage_users');
 		Permission::grant_group('admin', 'manage_users');
-		Permission::load_db_grants();
+		// DB grants are not loaded at startup; they are queried on demand in user_has/group_has when not found in memory.
 
 		if (defined('ADMIN_MENU_SLUG'))
 		{
